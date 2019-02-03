@@ -5,7 +5,7 @@ import 'constants.dart';
 import 'defaults.dart';
 import 'info.dart';
 
-DateTime get _today {
+DateTime get today {
   final now = DateTime.now();
   return DateTime(now.year, now.month, now.day);
 }
@@ -23,7 +23,7 @@ class AppState {
   set inicio(DateTime newValue) => _inicio = newValue;
 
   DateTime fin = Defaults.fin;
-  DateTime _fecha = _today;
+  DateTime _fecha = today;
 
   /// Si debería comportarse como la versión anterior:
   ///
@@ -65,7 +65,7 @@ class AppState {
 
   bool get canIncrement => fecha.isBefore(fin);
   bool get canDecrement => fecha.isAfter(inicio);
-  bool get isToday => fecha.difference(_today).inDays == 0;
+  bool get isToday => fecha.difference(today).inDays == 0;
 
   bool get noAlimentos => fecha.isAfter(fin) || fecha.isBefore(inicio);
 
@@ -79,7 +79,7 @@ class AppState {
 
   String getTitle() {
     if (noAlimentos) return 'Menú Chapingo';
-    return (_today == fecha)
+    return (today == fecha)
         ? 'Hoy (Día $_diaDelCiclo)'
         : '${dias[fecha.weekday - 1]} ${fecha.day}/${meses[fecha.month - 1]}'
         ' (Día $_diaDelCiclo)';

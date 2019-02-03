@@ -32,7 +32,7 @@ class Info {
     return ListTile(
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle) : null,
-      onTap: () => launch(url, statusBarBrightness: Brightness.light),
+      onTap: url != null ? () => launch(url, statusBarBrightness: Brightness.light) : null,
       leading: Icon(icon),
       trailing: url != null ? const Icon(Icons.launch) : null,
     );

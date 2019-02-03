@@ -113,8 +113,9 @@ Creada por Gabriel Rodríguez''',
             break;
           //TODO: checar que sí haya menú
           case Opciones.compartirMenu:
-            DateTime _day = DateTime.now();
-            Future<void> _shareMenu(DateTime day) {
+            final now = DateTime.now();
+            DateTime _day = DateTime(now.year, now.month, now.day);
+            Future<void> shareMenu(DateTime day) {
               final DateTime lunes =
                   day.add(Duration(days: -day.weekday + 1));
               final List<String> dias = [
@@ -155,7 +156,7 @@ Creada por Gabriel Rodríguez''',
                         child: Text('Esta semana'.toUpperCase()),
                         onPressed: () async {
                           //analytics.logEvent(name: 'compartir_menu');
-                          await _shareMenu(_day);
+                          await shareMenu(_day);
                           Navigator.of(context).pop();
                         },
                       ),
@@ -164,7 +165,7 @@ Creada por Gabriel Rodríguez''',
                         onPressed: () async {
                           //analytics.logEvent(name: 'compartir_menu');
                           _day = _day.add(const Duration(days: 7));
-                          await _shareMenu(_day);
+                          await shareMenu(_day);
                           Navigator.of(context).pop();
                         },
                       ),

@@ -29,8 +29,8 @@ android {
         applicationId "com.gabo.menu2018"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 2019011801
-        versionName "2.4.3.2"
+        versionCode 2019012901
+        versionName "2.4.3.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
