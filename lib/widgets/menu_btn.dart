@@ -28,7 +28,7 @@ class MenuBtn extends StatelessWidget {
                 'Descarga Menú Chapingo, la nueva app para ver el menú de la UACh: https://menu-chapingo.firebaseapp.com/dl.html');
             break;
           case Opciones.acerca:
-            String _fecha(int n) {
+            String intToDateStr(int n) {
               final String _string = n.toString();
               return '${_string.substring(6, 8)}/${meses[int.parse(_string.substring(4, 6)) - 1]}/${_string.substring(0, 4)} (${int.parse(_string.substring(8, 10))})';
             }
@@ -100,10 +100,10 @@ class MenuBtn extends StatelessWidget {
                 Text(
                   '''\
 Últimas actualizaciones
-Avisos: ${_fecha(avisos)}
-Menú: ${_fecha(menu)}
-Semestre: ${_fecha(semestre)}
-Aplicación: ${_fecha(lastUpdated)}
+Avisos: ${intToDateStr(avisos)}
+Menú: ${intToDateStr(menu)}
+Semestre: ${intToDateStr(semestre)}
+Aplicación: ${intToDateStr(lastUpdated)}
 
 Creada por Gabriel Rodríguez''',
                   style: Theme.of(context).textTheme.caption,
