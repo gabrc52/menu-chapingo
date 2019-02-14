@@ -9,15 +9,15 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  shared_preferences:
-  url_launcher:
+  shared_preferences: <0.5.0
+  url_launcher: <5.0.0
   #firebase_analytics:
-  firebase_messaging:
+  firebase_messaging: <3.0.0
   #flutter_custom_tabs:
-  share:
+  share: <0.6.0
   http:
-  connectivity:
-  package_info:
+  connectivity: <0.4.0
+  package_info: <0.4.0
 
 dev_dependencies:
   flutter_test:

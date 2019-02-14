@@ -6,9 +6,13 @@ import 'constants.dart';
 import 'defaults.dart';
 import 'info.dart';
 
+DateTime truncateDate(DateTime date) {
+  return DateTime(date.year, date.month, date.day);
+}
+
 DateTime get today {
   final now = DateTime.now();
-  return DateTime(now.year, now.month, now.day);
+  return truncateDate(now);
 }
 
 class AppState {
@@ -35,9 +39,9 @@ class AppState {
 
   DateTime get fecha => _fecha;
   set fecha(DateTime date) =>
-      _fecha = DateTime(date.year, date.month, date.day);
+      _fecha = truncateDate(date);
 
-  int get _diaDelCiclo {
+  int _fechaADiaDelCiclo(DateTime fecha) {
     if (legacy && fecha.isAtSameMomentAs(inicio)) {
       if (menu['0'] != null) {
         return 0;
@@ -47,6 +51,8 @@ class AppState {
     }
     return fecha.difference(_inicio).inDays % 56 + 1;
   }
+
+  int get _diaDelCiclo => _fechaADiaDelCiclo(fecha);
 
   void goToDate(DateTime date) {
     fecha = date;
@@ -68,14 +74,19 @@ class AppState {
   bool get canDecrement => fecha.isAfter(inicio);
   bool get isToday => fecha.difference(today).inDays == 0;
 
-  bool get noAlimentos => fecha.isAfter(fin) || fecha.isBefore(inicio);
+  bool _noAlimentos(DateTime fecha) => fecha.isAfter(fin) || fecha.isBefore(inicio);
+  bool get noAlimentos => _noAlimentos(fecha);
 
-  List<String> currentMenu(int alimento) {
+  List<String> getMenu(DateTime fecha, int alimento) {
     if (noAlimentos) throw NoAlimentosException();
     var menuActual = <String>[]; // ignore: prefer_final_locals
-    menu['$_diaDelCiclo'][alimento]
+    menu['${_fechaADiaDelCiclo(fecha)}'][alimento]
         .forEach((dynamic element) => menuActual.add(element));
     return menuActual;
+  }
+
+  List<String> currentMenu(int alimento) {
+    return getMenu(fecha, alimento);
   }
 
   String getTitle() {
@@ -84,6 +95,25 @@ class AppState {
         ? 'Hoy (Día $_diaDelCiclo)'
         : '${dias[fecha.weekday - 1]} ${fecha.day}/${meses[fecha.month - 1]}'
         ' (Día $_diaDelCiclo)';
+  }
+
+  String menuAsString({DateTime from, DateTime to}) {
+    from = truncateDate(from);
+    to = truncateDate(to);
+    final menu = StringBuffer();
+    for (DateTime date = from; !date.isAtSameMomentAs(to); date = date.add(const Duration(days: 1))) {
+      if (_noAlimentos(date)) continue; //TODO: display something
+      menu.writeln('${dias_completos[date.weekday - 1]} ${_fechaADiaDelCiclo(date)}/${meses[date.month - 1]}:');
+      for (int alimento = 0; alimento < 3; alimento++) {
+        menu.write('  ${Alimento.values[alimento]}: ');
+        menu.write(getMenu(date, alimento)[Componente.principal]);
+        menu.write('; ');
+        menu.writeln(getMenu(date, alimento)[Componente.postre]);
+      }
+      menu.writeln();
+    }
+    menu.write('Enviado con Menú Chapingo, descárgalo en https://menu-chapingo.firebaseapp.com/dl.html');
+    return menu.toString();
   }
 
   Info get everydayInfo => Info.fromJson(info['*']);

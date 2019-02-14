@@ -3,7 +3,7 @@ class Defaults {
   Defaults._();
   
   static const menu = <String, dynamic>{
-   "0":[[],[],["Leche","Cereal","Enchiladas verdes de pollo","Lechuga, queso y crema","Frijoles guisados",null,"Té de limón","Fruta"]],
+   "0":[<String>[],<String>[],["Leche","Cereal","Enchiladas verdes de pollo","Lechuga, queso y crema","Frijoles guisados",null,"Té de limón","Fruta"]],
    "1":[["Champurrado",null,"Tamales de mole rojo y salsa verde",null,"Frijoles refritos","Totopos","Café","Fruta"],["Crema de chayote","Tallarines blancos","Milanesa de res empanizada","Lechuga, guacamole y limón","Frijoles de la olla","Tortilla","Agua de fruta","Fruta"],["Leche","Cereal","Enchiladas verdes de pollo","Lechuga, queso y crema","Frijoles guisados",null,"Té de limón","Fruta"]],
    "2":[["Licuado de plátano",null,"Sincronizadas de maíz","Verduras al vapor salsa de chipotle y aguacate","Frijoles refritos",null,"Té de manzanilla","Yogurt con granola"],["Consomé con verduras y mollejas","Arroz blanco c/salchicha","Mole verde con pollo con calabacitas",null,"Frijoles guisados","Tortilla","Agua de fruta","Fruta"],["Leche\nYogurt","Granola","Tortitas de espinacas en caldillo de jitomate",null,"Frijoles guisados","Tortilla","Té de fruta","Fruta"]],
    "3":[["Leche","Cereal","Sopes de verduras","Salsa roja cocida, lechuga, queso y crema","Frijoles molidos",null,"Café","Fruta"],["Sopa azteca","Arroz blanco","Cerdo en salsa verde con verdolagas",null,"Frijoles de la olla","Tortilla","Agua de fruta","Fruta"],["Leche",null,"Hamburguesa de res con queso amarillo","Lechuga, chiles curados, jitomate, cebolla, cátsup, mostaza y mayonesa",null,null,"Té de azahares","Papas fritas\nFruta"]],

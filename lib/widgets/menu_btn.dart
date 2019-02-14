@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
 import 'package:connectivity/connectivity.dart';
 import 'package:menu2018/constants.dart';
 import 'package:menu2018/state_container.dart';
+import 'package:menu2018/models.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -113,37 +113,8 @@ Creada por Gabriel Rodríguez''',
             break;
           //TODO: checar que sí haya menú
           case Opciones.compartirMenu:
-            final now = DateTime.now();
-            DateTime _day = DateTime(now.year, now.month, now.day);
-            Future<void> shareMenu(DateTime day) {
-              final DateTime lunes =
-                  day.add(Duration(days: -day.weekday + 1));
-              final List<String> dias = [
-                'lunes',
-                'martes',
-                'miércoles',
-                'jueves',
-                'viernes',
-                'sábado',
-                'domingo'
-              ];
-              final List<String> alimentos = ['Desayuno', 'Comida', 'Cena'];
-              int dia =
-                  lunes.difference(container.state.inicio).inDays % 56 + 1;
-              String compartir = '';
-              for (int i = 0; i < 7; i++) {
-                compartir += '${dias[i]}:';
-                for (int i = 0; i < 3; i++) {
-                  compartir +=
-                      '\n  ${alimentos[i]}: ${container.state.menu['$dia'][i][2]} (${container.state.menu['$dia'][i][7]})';
-                }
-                compartir += '\n\n';
-                dia++;
-              }
-              compartir +=
-                  'Este mensaje ha sido generado con Menú Chapingo. Descarga la app en menu-chapingo.firebaseapp.com/dl.html';
-              return Share.share(compartir);
-            }
+            final now = today;
+            final monday = now.add(Duration(days: -now.weekday + 1));
             showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {
@@ -153,19 +124,26 @@ Creada por Gabriel Rodríguez''',
                         '¿Quieres compartir el menú de esta semana o el de la siguiente?'),
                     actions: <Widget>[
                       FlatButton(
-                        child: Text('Esta semana'.toUpperCase()),
-                        onPressed: () async {
-                          //analytics.logEvent(name: 'compartir_menu');
-                          await shareMenu(_day);
+                        child: const Text('Esta semana'),
+                        onPressed: () {
+                          Share.share(
+                            container.state.menuAsString(
+                              from: monday,
+                              to: monday.add(const Duration(days: 7)),
+                            ),
+                          );
                           Navigator.of(context).pop();
                         },
                       ),
                       FlatButton(
-                        child: Text('Próxima semana'.toUpperCase()),
-                        onPressed: () async {
-                          //analytics.logEvent(name: 'compartir_menu');
-                          _day = _day.add(const Duration(days: 7));
-                          await shareMenu(_day);
+                        child: const Text('Próxima semana'),
+                        onPressed: () {
+                          Share.share(
+                            container.state.menuAsString(
+                              from: monday.add(const Duration(days: 7)),
+                              to: monday.add(const Duration(days: 14)),
+                            ),
+                          );
                           Navigator.of(context).pop();
                         },
                       ),
