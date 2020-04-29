@@ -37,6 +37,7 @@ class AppState {
   /// Esto no debería ser así pero es para mantener compatibilidad con la versión anterior hasta que se actualicen
   bool legacy = Defaults.legacy;
 
+  /// Se asegura que la fecha no tenga hora
   DateTime get fecha => _fecha;
   set fecha(DateTime date) =>
       _fecha = truncateDate(date);
@@ -94,6 +95,7 @@ class AppState {
     return (today == fecha)
         ? 'Hoy (Día $_diaDelCiclo)'
         : '${dias[fecha.weekday - 1]} ${fecha.day}/${meses[fecha.month - 1]}'
+        /// TODO[UX]: es buena idea mostrar el día del ciclo?
         ' (Día $_diaDelCiclo)';
   }
 
