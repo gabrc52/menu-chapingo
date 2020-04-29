@@ -10,5 +10,7 @@ packages
 pubspec.lock
 .flutter-plugins
 android/key.properties
-android/app/google-services.json
+android/app/google-services.json    
+ios/Runner/GoogleService-Info.plist
 GoogleService-Info.plist
+.git-old
