@@ -82,7 +82,7 @@ class NoAlimentosScreen extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'Toca para actualizar el menú',
-            style: Theme.of(context).textTheme.body2.copyWith(
+            style: Theme.of(context).textTheme.bodyText1.copyWith(
                 fontSize: 14, color: Theme.of(context).primaryColorDark),
             textAlign: TextAlign.center,
           ),
