@@ -25,7 +25,6 @@ class Info {
   final String subtitle;
   final String url;
 
-  ///TODO: Implement custom info icons
   final IconData icon;
 
   ListTile toListTile() {
