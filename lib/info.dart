@@ -31,7 +31,9 @@ class Info {
     return ListTile(
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle) : null,
-      onTap: url != null ? () async => launch(url, statusBarBrightness: Brightness.light) : null,
+      onTap: url != null
+          ? () async => launch(url, statusBarBrightness: Brightness.light)
+          : null,
       leading: Icon(icon),
       trailing: url != null ? const Icon(Icons.launch) : null,
     );
