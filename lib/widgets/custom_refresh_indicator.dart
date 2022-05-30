@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:menu2018/state_container.dart';
+import '../state_container.dart';
 
 class CustomRefreshIndicator extends StatelessWidget {
-  const CustomRefreshIndicator({@required this.child, this.isTopLevel = false});
+  const CustomRefreshIndicator({required this.child, this.isTopLevel = false});
 
   final Widget child;
   final bool isTopLevel;
@@ -11,9 +11,9 @@ class CustomRefreshIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
     return RefreshIndicator(
+      onRefresh: container!.update(context),
+      key: isTopLevel ? container?.refreshIndicatorKey : null,
       child: child,
-      onRefresh: container.update(context),
-      key: isTopLevel ? container.refreshIndicatorKey : null,
     );
   }
 }

@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:menu2018/constants.dart';
-import 'package:menu2018/state_container.dart';
-import 'package:menu2018/models.dart';
+import '../constants.dart';
+import '../state_container.dart';
+import '../models.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info/package_info.dart';
 
 //TODO: should be refactored
@@ -21,20 +21,27 @@ class MenuBtn extends StatelessWidget {
       onSelected: (Opciones choice) async {
         switch (choice) {
           case Opciones.actualizar:
-            container.showRefreshIndicatorAndUpdate();
+            container?.showRefreshIndicatorAndUpdate();
             break;
           case Opciones.compartir:
             Share.share(
-                'Descarga Menú Chapingo, la nueva app para ver el menú de la UACh: https://menu-chapingo.firebaseapp.com/dl.html');
+                'Descarga Menú Chapingo, la nueva app para ver el menú de la UACh: https://menu-chapingo.web.app/dl.html');
             break;
           case Opciones.acerca:
             String intToDateStr(int n) {
               final String _string = n.toString();
-              return '${_string.substring(6, 8)}/${meses[int.parse(_string.substring(4, 6)) - 1]}/${_string.substring(0, 4)} (${int.parse(_string.substring(8, 10))})';
+              return '${_string.substring(6, 8)}/${meses[int.parse(
+                  _string.substring(4, 6)) - 1]}/${_string.substring(
+                  0, 4)} (${int.parse(_string.substring(8, 10))})';
             }
             final prefs = await SharedPreferences.getInstance();
-            final packageInfo = await PackageInfo.fromPlatform();
-            final lastUpdated = int.parse(packageInfo.buildNumber);
+            int lastUpdated;
+            try {
+              final packageInfo = await PackageInfo.fromPlatform();
+              lastUpdated = int.parse(packageInfo.buildNumber);
+            } catch (e) {
+              lastUpdated = 9999999999;
+            }
             final avisos = prefs.getInt('lastUpdate_Info');
             final menu = prefs.getInt('lastUpdate_Menu');
             final semestre = prefs.getInt('lastUpdate_Fechas');
@@ -45,6 +52,7 @@ class MenuBtn extends StatelessWidget {
               applicationIcon: const Icon(Icons.restaurant_menu),
               children: <Widget>[
                 Container(
+                  padding: const EdgeInsets.only(bottom: 16.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -54,12 +62,12 @@ class MenuBtn extends StatelessWidget {
                               'Si te gusta la app, danos 5 estrellas 😉, o comparte tu opinión'),
                           leading: const Icon(Icons.shop, color: Colors.green),
                           onTap: () async {
+                            const String playStoreSchemeUrl = 'market://details?id=com.gabo.menu2018';
+                            const String playStoreWebUrl = 'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018';
                             try {
-                              url_launcher.launch(
-                                  'market://details?id=com.gabo.menu2018');
+                              launchUrl(Uri.parse(playStoreSchemeUrl), mode: LaunchMode.externalApplication);
                             } catch (e) {
-                              url_launcher.launch(
-                                  'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018');
+                              launchUrl(Uri.parse(playStoreWebUrl), mode: LaunchMode.externalApplication);
                             }
                           }),
                       ListTile(
@@ -72,20 +80,13 @@ class MenuBtn extends StatelessWidget {
                               'https://www.facebook.com/menuchapingo/';
                           if (Platform.isIOS || Platform.isMacOS) {
                             try {
-                              url_launcher.launch(iosUrl);
+                              launchUrl(Uri.parse(iosUrl));
                             } catch (e) {
-                              url_launcher.launch(url);
+                              launchUrl(Uri.parse(url));
                             }
-                          } else if (await url_launcher.canLaunch(url)) {
-                            url_launcher.launch(url);
                           } else {
-                            Scaffold.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text('Error al abrir página de Facebook.'),
-                                duration: Duration(seconds: 5),
-                              ),
-                            );
+                            launchUrl(Uri.parse(url), mode: LaunchMode
+                                .externalApplication);
                           }
                         },
                         leading: const Icon(
@@ -95,23 +96,26 @@ class MenuBtn extends StatelessWidget {
                       ),
                     ],
                   ),
-                  padding: const EdgeInsets.only(bottom: 16.0),
                 ),
                 Text(
                   '''\
 Últimas actualizaciones
-Avisos: ${intToDateStr(avisos)}
-Menú: ${intToDateStr(menu)}
-Semestre: ${intToDateStr(semestre)}
+Avisos: ${intToDateStr(avisos ?? 9999999999)}
+Menú: ${intToDateStr(menu ?? 9999999999)}
+Semestre: ${intToDateStr(semestre ?? 9999999999)}
 Aplicación: ${intToDateStr(lastUpdated)}
 
-Creada por Gabriel Rodríguez''',
-                  style: Theme.of(context).textTheme.caption,
+Creada por Gabriel Rodríguez
+Colaborador/Administrador: Carter R. Dieguiño''',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .caption,
                 ),
               ],
             );
             break;
-          //TODO: checar que sí haya menú
+        //TODO: checar que sí haya menú
           case Opciones.compartirMenu:
             final now = today;
             final monday = now.add(Duration(days: -now.weekday + 1));
@@ -127,7 +131,7 @@ Creada por Gabriel Rodríguez''',
                         child: const Text('Esta semana'),
                         onPressed: () {
                           Share.share(
-                            container.state.menuAsString(
+                            container!.state.menuAsString(
                               from: monday,
                               to: monday.add(const Duration(days: 7)),
                             ),
@@ -139,7 +143,7 @@ Creada por Gabriel Rodríguez''',
                         child: const Text('Próxima semana'),
                         onPressed: () {
                           Share.share(
-                            container.state.menuAsString(
+                            container!.state.menuAsString(
                               from: monday.add(const Duration(days: 7)),
                               to: monday.add(const Duration(days: 14)),
                             ),
@@ -158,36 +162,36 @@ Creada por Gabriel Rodríguez''',
                   content: Text(
                       'Para enviar comentarios, necesitas una conexión a internet.')));
             } else {
-              Navigator.of(context).pushNamed('/feedback').then<bool>((value) {
-                if (value ?? false) {
-                  Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text('¡Gracias por tus comentarios! 🎉'),
-                    duration: Duration(seconds: 10),
-                  ));
-                }
-              });
+              final result = await Navigator.of(context).pushNamed('/feedback');
+              if (result == true) {
+                Scaffold.of(context).showSnackBar(const SnackBar(
+                  content: Text('¡Gracias por tus comentarios! 🎉'),
+                  duration: Duration(seconds: 10),
+                ));
+              }
             }
             break;
         }
       },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<Opciones>>[
-            const PopupMenuItem<Opciones>(
-              value: Opciones.actualizar,
-              child: Text('Actualizar menú'),
-            ),
-            const PopupMenuItem<Opciones>(
-              value: Opciones.compartir,
-              child: Text('Compartir aplicación'),
-            ),
-            const PopupMenuItem<Opciones>(
-                value: Opciones.compartirMenu, child: Text('Compartir menú')),
-            const PopupMenuItem<Opciones>(
-                value: Opciones.feedback, child: Text('Enviar sugerencias')),
-            const PopupMenuItem<Opciones>(
-              value: Opciones.acerca,
-              child: Text('Acerca de'),
-            ),
-          ],
+      itemBuilder: (BuildContext context) =>
+      <PopupMenuEntry<Opciones>>[
+        const PopupMenuItem<Opciones>(
+          value: Opciones.actualizar,
+          child: Text('Actualizar menú'),
+        ),
+        const PopupMenuItem<Opciones>(
+          value: Opciones.compartir,
+          child: Text('Compartir aplicación'),
+        ),
+        const PopupMenuItem<Opciones>(
+            value: Opciones.compartirMenu, child: Text('Compartir menú')),
+        const PopupMenuItem<Opciones>(
+            value: Opciones.feedback, child: Text('Enviar sugerencias')),
+        const PopupMenuItem<Opciones>(
+          value: Opciones.acerca,
+          child: Text('Acerca de'),
+        ),
+      ],
     );
   }
 }

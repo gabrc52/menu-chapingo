@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 class Info {
   const Info({this.title, this.subtitle, this.url, this.icon = Icons.info});
 
-  factory Info.fromJson(Map<String, dynamic> json) {
+  factory Info.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return const Info();
     }
@@ -21,18 +21,18 @@ class Info {
     );
   }
 
-  final String title;
-  final String subtitle;
-  final String url;
+  final String? title;
+  final String? subtitle;
+  final String? url;
 
   final IconData icon;
 
   ListTile toListTile() {
     return ListTile(
-      title: Text(title),
-      subtitle: subtitle != null ? Text(subtitle) : null,
+      title: Text(title!),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
       onTap: url != null
-          ? () async => launch(url, statusBarBrightness: Brightness.light)
+          ? () async => launchUrl(Uri.parse(url!))
           : null,
       leading: Icon(icon),
       trailing: url != null ? const Icon(Icons.launch) : null,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:menu2018/state_container.dart';
-import 'package:menu2018/constants.dart';
-import 'package:menu2018/widgets/custom_refresh_indicator.dart';
-import 'package:menu2018/info.dart';
+import '../state_container.dart';
+import '../constants.dart';
+import '../widgets/custom_refresh_indicator.dart';
+import '../info.dart';
 
 class TabContents extends StatelessWidget {
   const TabContents(this.alimento);
@@ -12,18 +12,18 @@ class TabContents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
-    container.firstRefresh();
+    container?.firstRefresh();
     List<ListTile> getChildren(BuildContext context) {
-      final List<String> menu = container.state.currentMenu(alimento);
+      final List<String?> menu = container!.state.currentMenu(alimento);
       List<ListTile> children = []; // ignore: prefer_final_locals
 
       //Agregar info
-      void addIfNotNull(Info info) {
-        if (info.isNotNull) children.add(info.toListTile());
+      void addIfNotNull(Info? info) {
+        if (info != null && info.isNotNull) children.add(info.toListTile());
       }
 
-      addIfNotNull(container.state.everydayInfo);
-      addIfNotNull(container.state.currentInfo);
+      addIfNotNull(container?.state?.everydayInfo);
+      addIfNotNull(container?.state?.currentInfo);
 
       //Agregar el menú
       var index = -1;
@@ -60,7 +60,7 @@ class TabContents extends StatelessWidget {
 
 class NoAlimentosScreen extends StatelessWidget {
   const NoAlimentosScreen({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -73,16 +73,16 @@ class NoAlimentosScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const CircleAvatar(
+            radius: 40,
             child: Icon(
               Icons.update,
               size: 60,
             ),
-            radius: 40,
           ),
           const SizedBox(height: 12),
           Text(
             'Toca para actualizar el menú',
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
+            style: Theme.of(context).textTheme.bodyText1!.copyWith(
                 fontSize: 14, color: Theme.of(context).primaryColorDark),
             textAlign: TextAlign.center,
           ),
@@ -94,7 +94,7 @@ class NoAlimentosScreen extends StatelessWidget {
           ),
         ],
       ),
-      onTap: () => container.showRefreshIndicatorAndUpdate(),
+      onTap: () => container!.showRefreshIndicatorAndUpdate(),
     );
   }
 }

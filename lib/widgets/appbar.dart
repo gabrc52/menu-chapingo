@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:menu2018/state_container.dart';
+import 'package:menu_reloaded/state_container.dart';
 import 'menu_btn.dart';
 
-AppBar buildAppBar({BuildContext context, Function setState}) {
-  final container = StateContainer.of(context);
+AppBar buildAppBar({required BuildContext context, required Function setState}) {
+  final container = StateContainer.of(context)!;
+
   return AppBar(
     title: Text(
-      container.title,
+      container.title ?? 'Menú Chapingo',
       overflow: TextOverflow.fade,
     ),
     bottom: const TabBar(
@@ -38,11 +39,11 @@ AppBar buildAppBar({BuildContext context, Function setState}) {
 
 class TodayButton extends StatelessWidget {
   const TodayButton({
-    Key key,
+    Key? key,
     this.onPressed,
   }) : super(key: key);
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,9 @@ class TodayButton extends StatelessWidget {
       icon: Stack(
         children: <Widget>[
           Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.zero,
+              padding: const EdgeInsets.fromLTRB(0.4, 5.5, 0.0, 0.0),
               child: Text(
                 DateTime.now().day.toString(),
                 style: TextStyle(
@@ -60,15 +64,12 @@ class TodayButton extends StatelessWidget {
                       : Theme.of(context).disabledColor,
                 ),
                 textScaleFactor: 1.0,
-              ),
-              alignment: Alignment.center,
-              margin: EdgeInsets.zero,
-              padding: const EdgeInsets.fromLTRB(0.4, 5.5, 0.0, 0.0)),
+              )),
           Container(
-            child: const Icon(Icons.calendar_today),
             margin: EdgeInsets.zero,
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
+            child: const Icon(Icons.calendar_today),
           ),
         ],
       ),

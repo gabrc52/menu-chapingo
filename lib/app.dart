@@ -15,6 +15,10 @@ class MenuApp extends StatelessWidget {
         accentColor: Colors.orangeAccent,
         brightness: Brightness.light,
       ),
+      darkTheme: ThemeData(
+        accentColor: Colors.orangeAccent,
+        brightness: Brightness.dark,
+      ),
       home: HomePage(),
       routes: {
         '/feedback': (context) => FeedbackPage(),

@@ -3,55 +3,58 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'models.dart';
 
+// TODO: Move to provider, or something else.
+// I am doing shenanigans trying to migrate this to nulll safety
+
 class StateContainer extends StatefulWidget {
   const StateContainer({
-    @required this.child,
+    required this.child,
     this.state,
   });
 
-  final AppState state;
+  final AppState? state;
   final Widget child;
 
   @override
   State<StateContainer> createState() => _StateContainerState();
 
-  static _StateContainerState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(
-        // ignore: avoid_as, since it was in a best practice example
-        _InheritedStateContainer) as _InheritedStateContainer).data;
+  static _StateContainerState? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()
+        ?.data;
   }
 }
 
 class _StateContainerState extends State<StateContainer> {
-  AppState state;
+  late AppState state;
 
   @override
   void initState() {
     super.initState();
-    state = widget.state;
+    state = widget.state!;
   }
 
   String get title => state.getTitle();
 
-  void goToDate(DateTime date) {
+  void goToDate(DateTime? date) {
     setState(() => state.goToDate(date ?? state.fecha));
   }
 
-  Function get incrementDate {
+  VoidCallback? get incrementDate {
     if (state.noAlimentos) return null;
     return state.canIncrement
         ? () => setState(() => state.incrementDate())
         : null;
   }
 
-  Function get decrementDate {
+  VoidCallback? get decrementDate {
     if (state.noAlimentos) return null;
     return state.canDecrement
         ? () => setState(() => state.decrementDate())
         : null;
   }
 
-  Function get today {
+  VoidCallback? get today {
     if (state.noAlimentos) return null;
     return state.isToday ? null : () => setState(() => state.goToToday());
   }
@@ -59,13 +62,13 @@ class _StateContainerState extends State<StateContainer> {
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey = GlobalKey();
 
   void showRefreshIndicatorAndUpdate() {
-    refreshIndicatorKey.currentState.show();
+    refreshIndicatorKey.currentState?.show();
   }
 
   bool hasDoneFirstRefresh = false;
   Future<void> firstRefresh() async {
     if (!hasDoneFirstRefresh) {
-      refreshIndicatorKey.currentState.show();
+      refreshIndicatorKey.currentState?.show();
       hasDoneFirstRefresh = true;
     }
   }
@@ -74,9 +77,9 @@ class _StateContainerState extends State<StateContainer> {
   RefreshCallback update(BuildContext context) {
     return () async {
       void showSnackBar(
-          {@required String content, bool showRetryButton = true}) {
+          {required String content, bool showRetryButton = true}) {
         if (DateTime.now().isAfter(lastUpdate)) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(content),
               action: showRetryButton
@@ -98,7 +101,7 @@ class _StateContainerState extends State<StateContainer> {
       try {
         lastUpdate = DateTime.now();
         await state.update();
-        setState(() => null);
+        setState(() {});
       } on SocketException {
         showSnackBar(content: no_hay_internet);
       } on HttpException {
@@ -125,9 +128,9 @@ class _StateContainerState extends State<StateContainer> {
 
 class _InheritedStateContainer extends InheritedWidget {
   const _InheritedStateContainer({
-    Key key,
-    @required this.data,
-    @required Widget child,
+    Key? key,
+    required this.data,
+    required Widget child,
   }) : super(key: key, child: child);
 
   final _StateContainerState data;

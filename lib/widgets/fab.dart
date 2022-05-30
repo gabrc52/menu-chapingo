@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:menu2018/state_container.dart';
+import '../state_container.dart';
 
 class Fab extends StatelessWidget {
 
@@ -10,14 +10,16 @@ class Fab extends StatelessWidget {
 
     Future<void> _changeDate() async {
       // flutter's date picker asserts that initialDate is between firstDate and lastDate
-      final DateTime fechaNueva = await showDatePicker(
+      final DateTime? fechaNueva = await showDatePicker(
         context: context,
-        initialDate: container.state.fecha,
-        firstDate: container.state.inicio,
-        lastDate: container.state.fin,
+        initialDate: container!.state.fecha,
+        firstDate: container!.state.inicio,
+        lastDate: container!.state.fin,
         textDirection: TextDirection.ltr,
       );
-      container.goToDate(fechaNueva);
+      if (fechaNueva != null) {
+        container?.goToDate(fechaNueva);
+      }
     }
 
     return FloatingActionButton(

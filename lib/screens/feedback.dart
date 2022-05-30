@@ -28,7 +28,7 @@ class FeedbackPageState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      autovalidate: _autoValidate,
+      autovalidateMode: AutovalidateMode.disabled,
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -53,7 +53,7 @@ class FeedbackPageState extends State<FeedbackPage> {
                   hintText: 'Describe el problema o comparte tus ideas',
                 ),
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'En blanco';
                   }
                 },
@@ -63,10 +63,9 @@ class FeedbackPageState extends State<FeedbackPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'Al enviar comentarios, podrás recibir una respuesta por medio de una notificación.',
-                style: Theme.of(context).textTheme.caption,
-                textAlign: TextAlign.justify
-              ),
+                  'Al enviar comentarios, podrás recibir una respuesta por medio de una notificación.',
+                  style: Theme.of(context).textTheme.caption,
+                  textAlign: TextAlign.justify),
             ),
           ],
         ),
@@ -75,8 +74,8 @@ class FeedbackPageState extends State<FeedbackPage> {
   }
 
   Future<void> _sendFeedback() async {
-    if (_formKey.currentState.validate()) {
-      _scaffoldKey.currentState.showSnackBar(const SnackBar(
+    if (_formKey.currentState?.validate() ?? false) {
+      _scaffoldKey.currentState?.showSnackBar(const SnackBar(
         content: Text('Enviando tus comentarios...'),
         duration: Duration(hours: 1),
       ));
@@ -85,18 +84,18 @@ class FeedbackPageState extends State<FeedbackPage> {
           'https://docs.google.com/forms/d/e/1FAIpQLSdJwnwjmpxZt3vHlrlHgofb4gqYAXajDrlYPDIqjnH3QfYtmQ/formResponse';
       const feedback_field = 'entry.1589179264';
       const contact_field = 'entry.1786043628';
-      String token;
-      String buildNumber;
+      String? token;
+      late String buildNumber;
       try {
-        token = await FirebaseMessaging().getToken();
         final packageInfo = await PackageInfo.fromPlatform();
         buildNumber = packageInfo.buildNumber;
+        token = await FirebaseMessaging.instance.getToken();
       } catch (e) {
         token = 'NA:$e';
       } finally {
         try {
           final response = await http.post(
-            url,
+            Uri.parse(url),
             body: {
               feedback_field: feedback,
               contact_field: 'Token: $token\nVersión: $buildNumber\n',
@@ -108,7 +107,7 @@ class FeedbackPageState extends State<FeedbackPage> {
           }
         } catch (e) {
           // TODO: intentar usar messenger, pues se enviará cuando haya internet
-          _scaffoldKey.currentState.showSnackBar(const SnackBar(
+          _scaffoldKey.currentState?.showSnackBar(const SnackBar(
             content: Text(
                 'Ocurrió un error al enviar tus comentarios. Verifica tu conexión, o inténtalo más tarde.'),
           ));

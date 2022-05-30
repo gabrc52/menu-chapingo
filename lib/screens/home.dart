@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:menu2018/constants.dart';
-import 'package:menu2018/widgets/appbar.dart';
-import 'package:menu2018/widgets/custom_refresh_indicator.dart';
-import 'package:menu2018/widgets/fab.dart';
-import 'package:menu2018/widgets/tab_contents.dart';
-import 'package:menu2018/state_container.dart';
+import '../constants.dart';
+import '../widgets/appbar.dart';
+import '../widgets/custom_refresh_indicator.dart';
+import '../widgets/fab.dart';
+import '../widgets/tab_contents.dart';
+import '../state_container.dart';
 import 'package:connectivity/connectivity.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  StreamSubscription<ConnectivityResult> subscription;
+  StreamSubscription<ConnectivityResult>? subscription;
   
   // Si hay algún cambio en la conexión, volver a intentar la actualización
   @override
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     final container = StateContainer.of(context);
     subscription ??= Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result != ConnectivityResult.none) {
-        container.showRefreshIndicatorAndUpdate();
+        container?.showRefreshIndicatorAndUpdate();
       }
     });
   }
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    subscription.cancel();
+    subscription?.cancel();
   }
 
   @override
@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
           setState: setState,
         ),
         body: const CustomRefreshIndicator(
+          isTopLevel: true,
           child: TabBarView(
             children: <Widget>[
               TabContents(Alimento.desayuno),
@@ -55,7 +56,6 @@ class _HomePageState extends State<HomePage> {
               TabContents(Alimento.cena),
             ],
           ),
-          isTopLevel: true,
         ),
         floatingActionButton: Fab(),
       ),
