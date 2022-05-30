@@ -41,6 +41,7 @@ dependencies:
   connectivity: ^3.0.6
   package_info: ^2.0.2
   firebase_core: ^1.17.1
+  firebase_core_desktop: ^1.0.0
 
 
 
