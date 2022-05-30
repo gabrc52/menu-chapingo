@@ -51,6 +51,7 @@ class AppState {
         return 1;
       }
     }
+
     /// If this is not consistent and one is UTC and one isn't this leads to off-by-one bugs!
     /// All dates are now in UTC to fix the bug.
     assert(fecha.isUtc);
@@ -186,10 +187,10 @@ class AppState {
     if (updates['fechas'] > (prefs.getInt('lastUpdate_Fechas') ?? 0)) {
       final Map<String, dynamic> fechas = await _getJson('fechas.json');
       final Map inicioNuevo = fechas['inicio'];
-      inicio = DateTime(
+      inicio = DateTime.utc(
           inicioNuevo['year'], inicioNuevo['month'], inicioNuevo['day']);
       final Map finNuevo = fechas['fin'];
-      fin = DateTime(finNuevo['year'], finNuevo['month'], finNuevo['day']);
+      fin = DateTime.utc(finNuevo['year'], finNuevo['month'], finNuevo['day']);
       prefs.setInt('iYear', _inicio.year);
       prefs.setInt('iMonth', _inicio.month);
       prefs.setInt('iDay', _inicio.day);
