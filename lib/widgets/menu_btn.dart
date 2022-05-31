@@ -9,6 +9,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+// https://stackoverflow.com/questions/57937280/how-can-i-detect-if-my-flutter-app-is-running-in-the-web
 
 //TODO: should be refactored
 
@@ -30,9 +32,7 @@ class MenuBtn extends StatelessWidget {
           case Opciones.acerca:
             String intToDateStr(int n) {
               final String _string = n.toString();
-              return '${_string.substring(6, 8)}/${meses[int.parse(
-                  _string.substring(4, 6)) - 1]}/${_string.substring(
-                  0, 4)} (${int.parse(_string.substring(8, 10))})';
+              return '${_string.substring(6, 8)}/${meses[int.parse(_string.substring(4, 6)) - 1]}/${_string.substring(0, 4)} (${int.parse(_string.substring(8, 10))})';
             }
             final prefs = await SharedPreferences.getInstance();
             int lastUpdated;
@@ -62,12 +62,16 @@ class MenuBtn extends StatelessWidget {
                               'Si te gusta la app, danos 5 estrellas 😉, o comparte tu opinión'),
                           leading: const Icon(Icons.shop, color: Colors.green),
                           onTap: () async {
-                            const String playStoreSchemeUrl = 'market://details?id=com.gabo.menu2018';
-                            const String playStoreWebUrl = 'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018';
+                            const String playStoreSchemeUrl =
+                                'market://details?id=com.gabo.menu2018';
+                            const String playStoreWebUrl =
+                                'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018';
                             try {
-                              launchUrl(Uri.parse(playStoreSchemeUrl), mode: LaunchMode.externalApplication);
+                              launchUrl(Uri.parse(playStoreSchemeUrl),
+                                  mode: LaunchMode.externalApplication);
                             } catch (e) {
-                              launchUrl(Uri.parse(playStoreWebUrl), mode: LaunchMode.externalApplication);
+                              launchUrl(Uri.parse(playStoreWebUrl),
+                                  mode: LaunchMode.externalApplication);
                             }
                           }),
                       ListTile(
@@ -85,8 +89,8 @@ class MenuBtn extends StatelessWidget {
                               launchUrl(Uri.parse(url));
                             }
                           } else {
-                            launchUrl(Uri.parse(url), mode: LaunchMode
-                                .externalApplication);
+                            launchUrl(Uri.parse(url),
+                                mode: LaunchMode.externalApplication);
                           }
                         },
                         leading: const Icon(
@@ -107,15 +111,12 @@ Aplicación: ${intToDateStr(lastUpdated)}
 
 Creada por Gabriel Rodríguez
 Colaborador/Administrador: Carter R. Dieguiño''',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .caption,
+                  style: Theme.of(context).textTheme.caption,
                 ),
               ],
             );
             break;
-        //TODO: checar que sí haya menú
+          //TODO: checar que sí haya menú
           case Opciones.compartirMenu:
             final now = today;
             final monday = now.add(Duration(days: -now.weekday + 1));
@@ -173,8 +174,7 @@ Colaborador/Administrador: Carter R. Dieguiño''',
             break;
         }
       },
-      itemBuilder: (BuildContext context) =>
-      <PopupMenuEntry<Opciones>>[
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<Opciones>>[
         const PopupMenuItem<Opciones>(
           value: Opciones.actualizar,
           child: Text('Actualizar menú'),
@@ -184,9 +184,14 @@ Colaborador/Administrador: Carter R. Dieguiño''',
           child: Text('Compartir aplicación'),
         ),
         const PopupMenuItem<Opciones>(
-            value: Opciones.compartirMenu, child: Text('Compartir menú')),
-        const PopupMenuItem<Opciones>(
-            value: Opciones.feedback, child: Text('Enviar sugerencias')),
+          value: Opciones.compartirMenu,
+          child: Text('Compartir menú'),
+        ),
+        if (!kIsWeb)
+          const PopupMenuItem<Opciones>(
+            value: Opciones.feedback,
+            child: Text('Enviar sugerencias'),
+          ),
         const PopupMenuItem<Opciones>(
           value: Opciones.acerca,
           child: Text('Acerca de'),
