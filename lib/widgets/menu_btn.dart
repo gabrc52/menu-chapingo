@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../constants.dart';
 import '../state_container.dart';
 import '../models.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 //TODO: should be refactored
 
