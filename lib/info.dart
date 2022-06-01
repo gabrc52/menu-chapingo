@@ -32,7 +32,7 @@ class Info {
       title: Text(title!),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       onTap: url != null
-          ? () async => launchUrl(Uri.parse(url!))
+          ? () async => launchUrl(Uri.parse(url!), mode: LaunchMode.externalApplication)
           : null,
       leading: Icon(icon),
       trailing: url != null ? const Icon(Icons.launch) : null,
