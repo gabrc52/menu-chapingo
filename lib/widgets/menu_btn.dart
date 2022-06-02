@@ -56,24 +56,28 @@ class MenuBtn extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      ListTile(
-                          title: const Text('Google Play'),
-                          subtitle: const Text(
-                              'Si te gusta la app, danos 5 estrellas 😉, o comparte tu opinión'),
-                          leading: const Icon(Icons.shop, color: Colors.green),
-                          onTap: () async {
-                            const String playStoreSchemeUrl =
-                                'market://details?id=com.gabo.menu2018';
-                            const String playStoreWebUrl =
-                                'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018';
-                            try {
-                              launchUrl(Uri.parse(playStoreSchemeUrl),
-                                  mode: LaunchMode.externalApplication);
-                            } catch (e) {
-                              launchUrl(Uri.parse(playStoreWebUrl),
-                                  mode: LaunchMode.externalApplication);
-                            }
-                          }),
+                      /// TODO: update this with App Store link once available.
+                      /// Remember: Apple disallows any mentions of Android or Play Store
+                      if (!Platform.isIOS)
+                        ListTile(
+                            title: const Text('Google Play'),
+                            subtitle: const Text(
+                                'Si te gusta la app, danos 5 estrellas 😉, o comparte tu opinión'),
+                            leading:
+                                const Icon(Icons.shop, color: Colors.green),
+                            onTap: () async {
+                              const String playStoreSchemeUrl =
+                                  'market://details?id=com.gabo.menu2018';
+                              const String playStoreWebUrl =
+                                  'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018';
+                              try {
+                                launchUrl(Uri.parse(playStoreSchemeUrl),
+                                    mode: LaunchMode.externalApplication);
+                              } catch (e) {
+                                launchUrl(Uri.parse(playStoreWebUrl),
+                                    mode: LaunchMode.externalApplication);
+                              }
+                            }),
                       ListTile(
                         title: const Text('Página de Facebook'),
                         subtitle: const Text('No olvides dejar tu like 😉'),
