@@ -87,9 +87,9 @@ class MenuBtn extends StatelessWidget {
                           const String url =
                               'https://www.facebook.com/menuchapingo/';
                           if (Platform.isIOS || Platform.isMacOS) {
-                            try {
+                            if (await canLaunchUrl(Uri.parse(iosUrl))) {
                               launchUrl(Uri.parse(iosUrl));
-                            } catch (e) {
+                            } else {
                               launchUrl(Uri.parse(url));
                             }
                           } else {
