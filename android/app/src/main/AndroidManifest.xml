@@ -1,5 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gabo.menu2018">
+   <queries>
+       <intent>
+           <action android:name="android.intent.action.VIEW" />
+           <data android:scheme="fb" />
+       </intent>
+       <intent>
+           <action android:name="android.intent.action.VIEW" />
+           <data android:scheme="fb-messenger" />
+       </intent>
+   </queries>
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="Menú Chapingo"

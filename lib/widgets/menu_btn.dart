@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:menu2018/screens/feedback.dart';
 import 'package:menu2018/widgets/fab.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../constants.dart';
 import '../state_container.dart';
 import '../models.dart';
@@ -21,13 +22,12 @@ class MenuBtn extends StatelessWidget {
     final container = StateContainer.of(context);
     return PlatformPopupMenu(
       options: <PopupMenuOption>[
-        if (Platform.isIOS)
-          PopupMenuOption(
-            label: 'Cambiar fecha (día ${container?.state.diaDelCiclo})',
-            onTap: (option) {
-              Fab.changeDate(context);
-            },
-          ),
+        PopupMenuOption(
+          label: 'Cambiar fecha (día ${container?.state.diaDelCiclo})',
+          onTap: (option) {
+            Fab.changeDate(context);
+          },
+        ),
         PopupMenuOption(
           label: 'Actualizar menú',
           onTap: (option) {
@@ -135,7 +135,12 @@ class MenuBtn extends StatelessWidget {
                         if (await canLaunchUrl(Uri.parse(messengerUrlScheme))) {
                           launchUrl(Uri.parse(messengerUrlScheme));
                         } else {
-                          launchUrl(Uri.parse(messengerUrl));
+                          launchUrl(
+                            Uri.parse(messengerUrl),
+                            mode: Platform.isAndroid
+                                ? LaunchMode.externalApplication
+                                : LaunchMode.platformDefault,
+                          );
                         }
                       },
                     ),
@@ -203,6 +208,8 @@ class MenuBtn extends StatelessWidget {
                         onTap: () async {
                           //analytics.logEvent(name: 'fb');
                           const String iosUrl = 'fb://profile/214398592630533';
+                          const String androidUrl =
+                              'fb://page/214398592630533';
                           const String url =
                               'https://www.facebook.com/menuchapingo/';
                           if (Platform.isIOS || Platform.isMacOS) {
@@ -212,8 +219,17 @@ class MenuBtn extends StatelessWidget {
                               launchUrl(Uri.parse(url));
                             }
                           } else {
-                            launchUrl(Uri.parse(url),
-                                mode: LaunchMode.externalApplication);
+                            if (await canLaunchUrl(Uri.parse(androidUrl))) {
+                              launchUrl(
+                                Uri.parse(androidUrl),
+                                mode: LaunchMode.externalNonBrowserApplication,
+                              );
+                            } else {
+                              launchUrl(
+                                Uri.parse(url),
+                                mode: LaunchMode.externalApplication,
+                              );
+                            }
                           }
                         },
                         leading: const Icon(
