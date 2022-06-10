@@ -59,7 +59,7 @@ class AppState {
     return fecha.difference(_inicio).inDays % 56 + 1;
   }
 
-  int get _diaDelCiclo => _fechaADiaDelCiclo(fecha);
+  int get diaDelCiclo => _fechaADiaDelCiclo(fecha);
 
   void goToDate(DateTime date) {
     fecha = date;
@@ -103,11 +103,8 @@ class AppState {
   String getTitle() {
     if (noAlimentos) return 'Menú Chapingo';
     return (today == fecha)
-        ? 'Hoy (Día $_diaDelCiclo)'
-        : '${dias[fecha.weekday - 1]} ${fecha.day}/${meses[fecha.month - 1]}'
-
-            /// TODO[UX]: es buena idea mostrar el día del ciclo?
-            ' (Día $_diaDelCiclo)';
+        ? 'Menú de hoy'
+        : '${dias[fecha.weekday - 1]} ${fecha.day}/${meses[fecha.month - 1]}';
   }
 
   String menuAsString({required DateTime from, required DateTime to}) {

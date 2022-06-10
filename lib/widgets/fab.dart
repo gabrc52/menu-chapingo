@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../state_container.dart';
+import 'dart:io';
+import 'package:cupertino_icons/cupertino_icons.dart';
 
 class Fab extends StatelessWidget {
   static Future<void> changeDate(BuildContext context) async {
@@ -21,10 +24,15 @@ class Fab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final container = StateContainer.of(context);
     return FloatingActionButton(
       onPressed: () => changeDate(context),
       tooltip: 'Cambiar día',
-      child: const Icon(Icons.event),
+      child: Icon(Platform.isIOS
+          ? ((container?.state.isToday ?? false)
+              ? CupertinoIcons.calendar_today
+              : CupertinoIcons.calendar)
+          : Icons.event),
     );
   }
 }

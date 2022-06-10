@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../state_container.dart';
 import 'menu_btn.dart';
+import 'dart:io';
 
-AppBar buildAppBar({required BuildContext context, required Function setState}) {
+AppBar buildAppBar(
+    {required BuildContext context, required Function setState}) {
   final container = StateContainer.of(context)!;
 
   return AppBar(
@@ -10,9 +13,10 @@ AppBar buildAppBar({required BuildContext context, required Function setState}) 
       container.title ?? 'Menú Chapingo',
       overflow: TextOverflow.fade,
     ),
-    bottom: const TabBar(
+    bottom: TabBar(
       isScrollable: true,
-      tabs: <Widget>[
+      labelColor: Platform.isIOS ? CupertinoColors.activeBlue : null,
+      tabs: const <Widget>[
         Tab(text: 'DESAYUNO'),
         Tab(text: 'COMIDA'),
         Tab(text: 'CENA'),
@@ -60,7 +64,7 @@ class TodayButton extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 11.0,
                   color: onPressed != null
-                      ? Colors.white
+                      ? Theme.of(context).appBarTheme.actionsIconTheme?.color
                       : Theme.of(context).disabledColor,
                 ),
                 textScaleFactor: 1.0,
