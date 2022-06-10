@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:menu2018/screens/feedback.dart';
+import 'package:menu2018/widgets/fab.dart';
 import '../constants.dart';
 import '../state_container.dart';
 import '../models.dart';
@@ -12,28 +15,102 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 // https://stackoverflow.com/questions/57937280/how-can-i-detect-if-my-flutter-app-is-running-in-the-web
 
-//TODO: should be refactored
-
 class MenuBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
-    return PopupMenuButton<Opciones>(
-      tooltip: 'Menú',
-      onSelected: (Opciones choice) async {
-        switch (choice) {
-          case Opciones.actualizar:
+    return PlatformPopupMenu(
+      options: <PopupMenuOption>[
+        if (Platform.isIOS)
+          PopupMenuOption(
+            label: 'Cambiar fecha',
+            onTap: (option) {
+              Fab.changeDate(context);
+            },
+          ),
+        PopupMenuOption(
+          label: 'Actualizar menú',
+          onTap: (option) {
             container?.showRefreshIndicatorAndUpdate();
-            break;
-          case Opciones.compartir:
+          },
+        ),
+        PopupMenuOption(
+          label: 'Compartir aplicación',
+          onTap: (option) {
             Share.share(
                 'Descarga Menú Chapingo, la nueva app para ver el menú de la UACh: https://menu-chapingo.web.app/dl.html');
-            break;
-          case Opciones.acerca:
+          },
+        ),
+        PopupMenuOption(
+          label: 'Compartir menú',
+          onTap: (option) {
+            final now = today;
+            final monday = now.add(Duration(days: -now.weekday + 1));
+            showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return PlatformAlertDialog(
+                    title: const Text('Compartir menú'),
+                    content: const Text(
+                        '¿Quieres compartir el menú de esta semana o el de la siguiente?'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Esta semana'),
+                        onPressed: () {
+                          Share.share(
+                            container!.state.menuAsString(
+                              from: monday,
+                              to: monday.add(const Duration(days: 7)),
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Próxima semana'),
+                        onPressed: () {
+                          Share.share(
+                            container!.state.menuAsString(
+                              from: monday.add(const Duration(days: 7)),
+                              to: monday.add(const Duration(days: 14)),
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          },
+        ),
+        PopupMenuOption(
+          label: 'Enviar sugerencias',
+          onTap: (option) async {
+            final connectivityResult = await Connectivity().checkConnectivity();
+            if (connectivityResult == ConnectivityResult.none) {
+              Scaffold.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                      'Para enviar comentarios, necesitas una conexión a internet.')));
+            } else {
+              final result = await Navigator.of(context).push(platformPageRoute(
+                  context: context, builder: (context) => FeedbackPage()));
+              if (result == true) {
+                Scaffold.of(context).showSnackBar(const SnackBar(
+                  content: Text('¡Gracias por tus comentarios! 🎉'),
+                  duration: Duration(seconds: 10),
+                ));
+              }
+            }
+          },
+        ),
+        PopupMenuOption(
+          label: 'Acerca de',
+          onTap: (option) async {
             String intToDateStr(int n) {
               final String _string = n.toString();
               return '${_string.substring(6, 8)}/${meses[int.parse(_string.substring(4, 6)) - 1]}/${_string.substring(0, 4)} (${int.parse(_string.substring(8, 10))})';
             }
+
             final prefs = await SharedPreferences.getInstance();
             int lastUpdated;
             try {
@@ -87,9 +164,9 @@ class MenuBtn extends StatelessWidget {
                           const String url =
                               'https://www.facebook.com/menuchapingo/';
                           if (Platform.isIOS || Platform.isMacOS) {
-                            try {
+                            if (await canLaunchUrl(Uri.parse(iosUrl))) {
                               launchUrl(Uri.parse(iosUrl));
-                            } catch (e) {
+                            } else {
                               launchUrl(Uri.parse(url));
                             }
                           } else {
@@ -119,88 +196,10 @@ Colaborador/Administrador: Carter R. Dieguiño''',
                 ),
               ],
             );
-            break;
-          //TODO: checar que sí haya menú
-          case Opciones.compartirMenu:
-            final now = today;
-            final monday = now.add(Duration(days: -now.weekday + 1));
-            showDialog<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Compartir menú'),
-                    content: const Text(
-                        '¿Quieres compartir el menú de esta semana o el de la siguiente?'),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: const Text('Esta semana'),
-                        onPressed: () {
-                          Share.share(
-                            container!.state.menuAsString(
-                              from: monday,
-                              to: monday.add(const Duration(days: 7)),
-                            ),
-                          );
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      FlatButton(
-                        child: const Text('Próxima semana'),
-                        onPressed: () {
-                          Share.share(
-                            container!.state.menuAsString(
-                              from: monday.add(const Duration(days: 7)),
-                              to: monday.add(const Duration(days: 14)),
-                            ),
-                          );
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                });
-            break;
-          case Opciones.feedback:
-            final connectivityResult = await Connectivity().checkConnectivity();
-            if (connectivityResult == ConnectivityResult.none) {
-              Scaffold.of(context).showSnackBar(const SnackBar(
-                  content: Text(
-                      'Para enviar comentarios, necesitas una conexión a internet.')));
-            } else {
-              final result = await Navigator.of(context).pushNamed('/feedback');
-              if (result == true) {
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                  content: Text('¡Gracias por tus comentarios! 🎉'),
-                  duration: Duration(seconds: 10),
-                ));
-              }
-            }
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<Opciones>>[
-        const PopupMenuItem<Opciones>(
-          value: Opciones.actualizar,
-          child: Text('Actualizar menú'),
-        ),
-        const PopupMenuItem<Opciones>(
-          value: Opciones.compartir,
-          child: Text('Compartir aplicación'),
-        ),
-        const PopupMenuItem<Opciones>(
-          value: Opciones.compartirMenu,
-          child: Text('Compartir menú'),
-        ),
-        if (!kIsWeb)
-          const PopupMenuItem<Opciones>(
-            value: Opciones.feedback,
-            child: Text('Enviar sugerencias'),
-          ),
-        const PopupMenuItem<Opciones>(
-          value: Opciones.acerca,
-          child: Text('Acerca de'),
+          },
         ),
       ],
+      icon: Icon(context.platformIcons.ellipsis),
     );
   }
 }
