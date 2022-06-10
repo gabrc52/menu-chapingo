@@ -46,7 +46,7 @@ class MenuBtn extends StatelessWidget {
           onTap: (option) {
             final now = today;
             final monday = now.add(Duration(days: -now.weekday + 1));
-            showDialog<void>(
+            showPlatformDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return PlatformAlertDialog(
@@ -54,7 +54,7 @@ class MenuBtn extends StatelessWidget {
                     content: const Text(
                         '¿Quieres compartir el menú de esta semana o el de la siguiente?'),
                     actions: <Widget>[
-                      TextButton(
+                      PlatformDialogAction(
                         child: const Text('Esta semana'),
                         onPressed: () {
                           Share.share(
@@ -66,7 +66,7 @@ class MenuBtn extends StatelessWidget {
                           Navigator.of(context).pop();
                         },
                       ),
-                      TextButton(
+                      PlatformDialogAction(
                         child: const Text('Próxima semana'),
                         onPressed: () {
                           Share.share(
