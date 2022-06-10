@@ -1,39 +1,58 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../state_container.dart';
 import 'menu_btn.dart';
 
-AppBar buildAppBar({required BuildContext context, required Function setState}) {
+PlatformAppBar buildAppBar(
+    {required BuildContext context, required Function setState}) {
   final container = StateContainer.of(context)!;
 
-  return AppBar(
-    title: Text(
-      container.title ?? 'Menú Chapingo',
-      overflow: TextOverflow.fade,
-    ),
-    bottom: const TabBar(
-      isScrollable: true,
-      tabs: <Widget>[
-        Tab(text: 'DESAYUNO'),
-        Tab(text: 'COMIDA'),
-        Tab(text: 'CENA'),
-      ],
-    ),
-    actions: <Widget>[
-      IconButton(
-        icon: const Icon(Icons.chevron_left),
+  List<Widget> actions = <Widget>[
+    PlatformIconButton(
+      icon: Icon(context.platformIcons.leftChevron),
+      material: (context, target) => MaterialIconButtonData(
         tooltip: 'Retroceder día',
-        onPressed: container.decrementDate,
       ),
-      TodayButton(
-        onPressed: container.today,
-      ),
-      IconButton(
-        icon: const Icon(Icons.chevron_right),
+      onPressed: container.decrementDate,
+    ),
+    TodayButton(
+      onPressed: container.today,
+    ),
+    PlatformIconButton(
+      icon: Icon(context.platformIcons.rightChevron),
+      material: (context, target) => MaterialIconButtonData(
         tooltip: 'Avanzar día',
-        onPressed: container.incrementDate,
       ),
-      MenuBtn(),
-    ],
+      onPressed: container.incrementDate,
+    ),
+    Material(child: MenuBtn()),
+  ];
+
+  return PlatformAppBar(
+    backgroundColor: Theme.of(context).canvasColor,
+    leading: Center(
+      child: Text(
+        container.title ?? 'Menú Chapingo',
+        overflow: TextOverflow.fade,
+      ),
+    ),
+    cupertino: (context, target) => CupertinoNavigationBarData(
+      border: Border(),
+    ),
+    material: (context, platform) => MaterialAppBarData(
+      bottom: const TabBar(
+        isScrollable: true,
+        tabs: <Widget>[
+          Tab(text: 'DESAYUNO'),
+          Tab(text: 'COMIDA'),
+          Tab(text: 'CENA'),
+        ],
+      ),
+    ),
+    trailingActions: actions,
   );
 }
 
@@ -48,19 +67,25 @@ class TodayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      color: Platform.isIOS
+          ? CupertinoColors.systemBlue
+          : Theme.of(context).iconTheme.color,
       icon: Stack(
         children: <Widget>[
           Container(
               alignment: Alignment.center,
               margin: EdgeInsets.zero,
-              padding: const EdgeInsets.fromLTRB(0.4, 5.5, 0.0, 0.0),
+              padding:
+                  EdgeInsets.fromLTRB(0.4, Platform.isIOS ? 10 : 5.5, 0.0, 0.0),
               child: Text(
                 DateTime.now().day.toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 11.0,
                   color: onPressed != null
-                      ? Colors.white
+                      ? (Platform.isIOS
+                          ? CupertinoColors.systemBlue
+                          : Theme.of(context).appBarTheme.foregroundColor)
                       : Theme.of(context).disabledColor,
                 ),
                 textScaleFactor: 1.0,

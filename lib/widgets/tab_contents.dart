@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../state_container.dart';
 import '../constants.dart';
 import '../widgets/custom_refresh_indicator.dart';
@@ -44,10 +47,14 @@ class TabContents extends StatelessWidget {
 
     try {
       return CustomRefreshIndicator(
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16.0),
-          children: getChildren(context),
+        child: Material(
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              ...getChildren(context)
+            ],
+          ),
         ),
       );
     } on NoAlimentosException {
