@@ -23,7 +23,7 @@ class MenuBtn extends StatelessWidget {
       options: <PopupMenuOption>[
         if (Platform.isIOS)
           PopupMenuOption(
-            label: 'Cambiar fecha',
+            label: 'Cambiar fecha (día ${container?.state.diaDelCiclo})',
             onTap: (option) {
               Fab.changeDate(context);
             },
