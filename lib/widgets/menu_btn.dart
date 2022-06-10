@@ -86,21 +86,63 @@ class MenuBtn extends StatelessWidget {
         PopupMenuOption(
           label: 'Enviar sugerencias',
           onTap: (option) async {
-            final connectivityResult = await Connectivity().checkConnectivity();
-            if (connectivityResult == ConnectivityResult.none) {
-              Scaffold.of(context).showSnackBar(const SnackBar(
-                  content: Text(
-                      'Para enviar comentarios, necesitas una conexión a internet.')));
-            } else {
-              final result = await Navigator.of(context).push(platformPageRoute(
-                  context: context, builder: (context) => FeedbackPage()));
-              if (result == true) {
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                  content: Text('¡Gracias por tus comentarios! 🎉'),
-                  duration: Duration(seconds: 10),
-                ));
-              }
-            }
+            showPlatformDialog(
+              context: context,
+              builder: (newContext) {
+                return PlatformAlertDialog(
+                  title: const Text('Enviar comentarios'),
+                  content: const Text(
+                      '¿Quieres enviar comentarios sobre la aplicación o sobre el servicio de alimentación?'),
+                  actions: [
+                    PlatformDialogAction(
+                      child: PlatformText('Aplicación'),
+                      onPressed: () async {
+                        final connectivityResult =
+                            await Connectivity().checkConnectivity();
+                        if (connectivityResult == ConnectivityResult.none) {
+                          Scaffold.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Para enviar comentarios, necesitas una conexión a internet.'),
+                            ),
+                          );
+                        } else {
+                          Navigator.of(context).pop();
+                          final result = await Navigator.of(context).push(
+                              platformPageRoute(
+                                  context: context,
+                                  builder: (context) => FeedbackPage()));
+                          if (result == true) {
+                            Scaffold.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('¡Gracias por tus comentarios! 🎉'),
+                                duration: Duration(seconds: 10),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                    PlatformDialogAction(
+                      child: PlatformText('Servicio'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        const messengerUrlScheme =
+                            'fb-messenger://user-thread/1557039931179093';
+                        const messengerUrl = 'https://m.me/1557039931179093';
+
+                        if (await canLaunchUrl(Uri.parse(messengerUrlScheme))) {
+                          launchUrl(Uri.parse(messengerUrlScheme));
+                        } else {
+                          launchUrl(Uri.parse(messengerUrl));
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
         PopupMenuOption(
