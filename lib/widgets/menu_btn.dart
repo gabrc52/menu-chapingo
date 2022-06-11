@@ -20,6 +20,8 @@ class MenuBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
+    final box = context.findRenderObject() as RenderBox?;
+    final sharePositionOrigin = box!.localToGlobal(Offset.zero) & box.size;
     return PlatformPopupMenu(
       options: <PopupMenuOption>[
         PopupMenuOption(
@@ -38,7 +40,9 @@ class MenuBtn extends StatelessWidget {
           label: 'Compartir aplicación',
           onTap: (option) {
             Share.share(
-                'Descarga Menú Chapingo, la nueva app para ver el menú de la UACh: https://menu-chapingo.web.app/dl.html');
+              'Descarga Menú Chapingo, la nueva app para ver el menú de la UACh: https://menu-chapingo.web.app/dl.html',
+              sharePositionOrigin: sharePositionOrigin,
+            );
           },
         ),
         PopupMenuOption(
@@ -49,6 +53,7 @@ class MenuBtn extends StatelessWidget {
             showPlatformDialog(
                 context: context,
                 builder: (BuildContext context) {
+                  final Size size = MediaQuery.of(context).size;
                   return PlatformAlertDialog(
                     title: const Text('Compartir menú'),
                     content: const Text(
@@ -62,6 +67,7 @@ class MenuBtn extends StatelessWidget {
                               from: monday,
                               to: monday.add(const Duration(days: 7)),
                             ),
+                            sharePositionOrigin: sharePositionOrigin,
                           );
                           Navigator.of(context).pop();
                         },
@@ -74,6 +80,7 @@ class MenuBtn extends StatelessWidget {
                               from: monday.add(const Duration(days: 7)),
                               to: monday.add(const Duration(days: 14)),
                             ),
+                            sharePositionOrigin: sharePositionOrigin,
                           );
                           Navigator.of(context).pop();
                         },
@@ -208,8 +215,7 @@ class MenuBtn extends StatelessWidget {
                         onTap: () async {
                           //analytics.logEvent(name: 'fb');
                           const String iosUrl = 'fb://profile/214398592630533';
-                          const String androidUrl =
-                              'fb://page/214398592630533';
+                          const String androidUrl = 'fb://page/214398592630533';
                           const String url =
                               'https://www.facebook.com/menuchapingo/';
                           if (Platform.isIOS || Platform.isMacOS) {
