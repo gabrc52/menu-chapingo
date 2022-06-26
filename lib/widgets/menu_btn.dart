@@ -1,11 +1,9 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:menu2018/screens/feedback.dart';
 import 'package:menu2018/widgets/fab.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:universal_platform/universal_platform.dart';
 import '../constants.dart';
 import '../state_container.dart';
 import '../models.dart';
@@ -13,10 +11,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-// https://stackoverflow.com/questions/57937280/how-can-i-detect-if-my-flutter-app-is-running-in-the-web
 
 class MenuBtn extends StatelessWidget {
+  const MenuBtn({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
@@ -25,7 +23,7 @@ class MenuBtn extends StatelessWidget {
     return PlatformPopupMenu(
       options: <PopupMenuOption>[
         PopupMenuOption(
-          label: 'Cambiar fecha (día ${container?.state.diaDelCiclo})',
+          label: 'Cambiar fecha (día ${container.state.diaDelCiclo})',
           onTap: (option) {
             Fab.changeDate(context);
           },
@@ -33,7 +31,7 @@ class MenuBtn extends StatelessWidget {
         PopupMenuOption(
           label: 'Actualizar menú',
           onTap: (option) {
-            container?.showRefreshIndicatorAndUpdate();
+            container.showRefreshIndicatorAndUpdate();
           },
         ),
         PopupMenuOption(
@@ -63,7 +61,7 @@ class MenuBtn extends StatelessWidget {
                         child: const Text('Esta semana'),
                         onPressed: () {
                           Share.share(
-                            container!.state.menuAsString(
+                            container.state.menuAsString(
                               from: monday,
                               to: monday.add(const Duration(days: 7)),
                             ),
@@ -76,7 +74,7 @@ class MenuBtn extends StatelessWidget {
                         child: const Text('Próxima semana'),
                         onPressed: () {
                           Share.share(
-                            container!.state.menuAsString(
+                            container.state.menuAsString(
                               from: monday.add(const Duration(days: 7)),
                               to: monday.add(const Duration(days: 14)),
                             ),
@@ -118,7 +116,7 @@ class MenuBtn extends StatelessWidget {
                           final result = await Navigator.of(context).push(
                               platformPageRoute(
                                   context: context,
-                                  builder: (context) => FeedbackPage()));
+                                  builder: (context) => const FeedbackPage()));
                           if (result == true) {
                             Scaffold.of(context).showSnackBar(
                               const SnackBar(
@@ -144,7 +142,7 @@ class MenuBtn extends StatelessWidget {
                         } else {
                           launchUrl(
                             Uri.parse(messengerUrl),
-                            mode: Platform.isAndroid
+                            mode: UniversalPlatform.isAndroid
                                 ? LaunchMode.externalApplication
                                 : LaunchMode.platformDefault,
                           );
@@ -161,8 +159,8 @@ class MenuBtn extends StatelessWidget {
           label: 'Acerca de',
           onTap: (option) async {
             String intToDateStr(int n) {
-              final String _string = n.toString();
-              return '${_string.substring(6, 8)}/${meses[int.parse(_string.substring(4, 6)) - 1]}/${_string.substring(0, 4)} (${int.parse(_string.substring(8, 10))})';
+              final String string = n.toString();
+              return '${string.substring(6, 8)}/${meses[int.parse(string.substring(4, 6)) - 1]}/${string.substring(0, 4)} (${int.parse(string.substring(8, 10))})';
             }
 
             final prefs = await SharedPreferences.getInstance();
@@ -187,28 +185,36 @@ class MenuBtn extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      /// TODO: update this with App Store link once available.
-                      /// Remember: Apple disallows any mentions of Android or Play Store
-                      if (!Platform.isIOS)
-                        ListTile(
-                            title: const Text('Google Play'),
-                            subtitle: const Text(
-                                'Si te gusta la app, danos 5 estrellas 😉, o comparte tu opinión'),
-                            leading:
-                                const Icon(Icons.shop, color: Colors.green),
-                            onTap: () async {
-                              const String playStoreSchemeUrl =
-                                  'market://details?id=com.gabo.menu2018';
-                              const String playStoreWebUrl =
-                                  'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018';
-                              try {
-                                launchUrl(Uri.parse(playStoreSchemeUrl),
-                                    mode: LaunchMode.externalApplication);
-                              } catch (e) {
-                                launchUrl(Uri.parse(playStoreWebUrl),
-                                    mode: LaunchMode.externalApplication);
-                              }
-                            }),
+                      ListTile(
+                        title: Text(UniversalPlatform.isIOS
+                            ? 'App Store'
+                            : 'Google Play'),
+                        subtitle: const Text(
+                            'Si te gusta la app, danos 5 estrellas 😉, o comparte tu opinión'),
+                        leading: Icon(
+                          UniversalPlatform.isIOS ? Icons.star : Icons.shop,
+                          color: UniversalPlatform.isIOS ? null : Colors.green,
+                        ),
+                        onTap: () async {
+                          if (UniversalPlatform.isIOS) {
+                            const String appStoreUrl =
+                                'https://apps.apple.com/mx/app/men%C3%BA-chapingo/id1627445872';
+                            launchUrl(Uri.parse(appStoreUrl));
+                          } else {
+                            const String playStoreSchemeUrl =
+                                'market://details?id=com.gabo.menu2018';
+                            const String playStoreWebUrl =
+                                'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.gabo.menu2018';
+                            try {
+                              launchUrl(Uri.parse(playStoreSchemeUrl),
+                                  mode: LaunchMode.externalApplication);
+                            } catch (e) {
+                              launchUrl(Uri.parse(playStoreWebUrl),
+                                  mode: LaunchMode.externalApplication);
+                            }
+                          }
+                        },
+                      ),
                       ListTile(
                         title: const Text('Página de Facebook'),
                         subtitle: const Text('No olvides dejar tu like 😉'),
@@ -218,7 +224,8 @@ class MenuBtn extends StatelessWidget {
                           const String androidUrl = 'fb://page/214398592630533';
                           const String url =
                               'https://www.facebook.com/menuchapingo/';
-                          if (Platform.isIOS || Platform.isMacOS) {
+                          if (UniversalPlatform.isIOS ||
+                              UniversalPlatform.isMacOS) {
                             if (await canLaunchUrl(Uri.parse(iosUrl))) {
                               launchUrl(Uri.parse(iosUrl));
                             } else {

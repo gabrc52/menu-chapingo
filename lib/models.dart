@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 import 'defaults.dart';
@@ -114,7 +113,7 @@ class AppState {
     for (DateTime date = from;
         !date.isAtSameMomentAs(to);
         date = date.add(const Duration(days: 1))) {
-      if (_noAlimentos(date)) continue; //TODO: display something
+      if (_noAlimentos(date)) continue;
       menu.writeln(
           '${dias_completos[date.weekday - 1]} ${date.day}/${meses[date.month - 1]}:');
       for (int alimento = 0; alimento < 3; alimento++) {

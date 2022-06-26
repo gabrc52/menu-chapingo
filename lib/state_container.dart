@@ -4,34 +4,36 @@ import 'package:flutter/material.dart';
 import 'models.dart';
 
 // TODO: Move to provider, or something else.
-// I am doing shenanigans trying to migrate this to nulll safety
+// I am doing shenanigans trying to migrate this to null safety
+
+// Well, provider is a wrapper around inherited widgets...
 
 class StateContainer extends StatefulWidget {
   const StateContainer({
     required this.child,
-    this.state,
-  });
+    required this.state,
+    Key? key,
+  }) : super(key: key);
 
-  final AppState? state;
+  final AppState state;
   final Widget child;
 
   @override
-  State<StateContainer> createState() => _StateContainerState();
+  State<StateContainer> createState() => StateContainerState();
 
-  static _StateContainerState? of(BuildContext context) {
+  static StateContainerState of(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()
-        ?.data;
+        .dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()!
+        .data;
   }
 }
 
-class _StateContainerState extends State<StateContainer> {
-  late AppState state;
+class StateContainerState extends State<StateContainer> {
+  AppState get state => widget.state;
 
   @override
   void initState() {
     super.initState();
-    state = widget.state!;
   }
 
   String get title => state.getTitle();
@@ -112,7 +114,7 @@ class _StateContainerState extends State<StateContainer> {
       } catch (e, s) {
         showSnackBar(
             content: 'Error al actualizar. ¿Estás conectado a internet?');
-        print('$e\n$s');
+        debugPrint('$e\n$s');
       }
     };
   }
@@ -133,7 +135,7 @@ class _InheritedStateContainer extends InheritedWidget {
     required Widget child,
   }) : super(key: key, child: child);
 
-  final _StateContainerState data;
+  final StateContainerState data;
 
   // siempre true, como en el ejemplo en flutter_architecture_samples
   @override

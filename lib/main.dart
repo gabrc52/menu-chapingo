@@ -18,10 +18,11 @@ Future<void> main() async {
 
   /// Ask for notification permission and set up Firebase messaging
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // ignore: unused_local_variable
   NotificationSettings settings = await messaging.requestPermission();
 
   runApp(StateContainer(
     state: appState,
-    child: MenuApp(),
+    child: const MenuApp(),
   ));
 }

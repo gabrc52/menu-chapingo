@@ -5,27 +5,27 @@ import '../widgets/custom_refresh_indicator.dart';
 import '../info.dart';
 
 class TabContents extends StatelessWidget {
-  const TabContents(this.alimento);
+  const TabContents({required this.alimento, Key? key}) : super(key: key);
 
   final int alimento;
 
   @override
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
-    container?.firstRefresh();
+    container.firstRefresh();
     List<ListTile> getChildren(BuildContext context) {
-      final List<String?> menu = container!.state.currentMenu(alimento);
+      final List<String?> menu = container.state.currentMenu(alimento);
       List<ListTile> children = []; // ignore: prefer_final_locals
 
-      //Agregar info
+      // Agregar info
       void addIfNotNull(Info? info) {
         if (info != null && info.isNotNull) children.add(info.toListTile());
       }
 
-      addIfNotNull(container?.state?.everydayInfo);
-      addIfNotNull(container?.state?.currentInfo);
+      addIfNotNull(container.state.everydayInfo);
+      addIfNotNull(container.state.currentInfo);
 
-      //Agregar el menú
+      // Agregar el menú
       var index = -1;
       for (var item in menu) {
         index++;
@@ -83,7 +83,11 @@ class NoAlimentosScreen extends StatelessWidget {
           Text(
             'Toca para actualizar el menú',
             style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                fontSize: 14, color: Theme.of(context).primaryColorDark),
+                  fontSize: 14,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Theme.of(context).primaryColorDark
+                      : Theme.of(context).colorScheme.secondary,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4.5),
@@ -94,7 +98,7 @@ class NoAlimentosScreen extends StatelessWidget {
           ),
         ],
       ),
-      onTap: () => container!.showRefreshIndicatorAndUpdate(),
+      onTap: () => container.showRefreshIndicatorAndUpdate(),
     );
   }
 }

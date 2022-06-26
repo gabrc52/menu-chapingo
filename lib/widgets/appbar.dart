@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_platform/universal_platform.dart';
 import '../state_container.dart';
 import 'menu_btn.dart';
-import 'dart:io';
 
 AppBar buildAppBar(
     {required BuildContext context, required Function setState}) {
-  final container = StateContainer.of(context)!;
+  final container = StateContainer.of(context);
 
   return AppBar(
     title: Text(
-      container.title ?? 'Menú Chapingo',
+      container.title,
       overflow: TextOverflow.fade,
     ),
     bottom: TabBar(
       isScrollable: true,
-      labelColor: Platform.isIOS ? CupertinoColors.activeBlue : null,
+      labelColor: UniversalPlatform.isIOS ? CupertinoColors.activeBlue : null,
       tabs: const <Widget>[
         Tab(text: 'DESAYUNO'),
         Tab(text: 'COMIDA'),
@@ -36,7 +36,7 @@ AppBar buildAppBar(
         tooltip: 'Avanzar día',
         onPressed: container.incrementDate,
       ),
-      MenuBtn(),
+      const MenuBtn(),
     ],
   );
 }

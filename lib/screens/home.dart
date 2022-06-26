@@ -9,25 +9,29 @@ import '../state_container.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   StreamSubscription<ConnectivityResult>? subscription;
-  
+
   // Si hay algún cambio en la conexión, volver a intentar la actualización
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final container = StateContainer.of(context);
-    subscription ??= Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    subscription ??= Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
       if (result != ConnectivityResult.none) {
-        container?.showRefreshIndicatorAndUpdate();
+        container.showRefreshIndicatorAndUpdate();
       }
     });
   }
-  
+
   @override
   void dispose() {
     super.dispose();
@@ -40,7 +44,9 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       initialIndex: hour > 15
           ? Alimento.cena
-          : hour > 9 ? Alimento.comida : Alimento.desayuno,
+          : hour > 9
+              ? Alimento.comida
+              : Alimento.desayuno,
       length: 3,
       child: Scaffold(
         appBar: buildAppBar(
@@ -51,13 +57,13 @@ class _HomePageState extends State<HomePage> {
           isTopLevel: true,
           child: TabBarView(
             children: <Widget>[
-              TabContents(Alimento.desayuno),
-              TabContents(Alimento.comida),
-              TabContents(Alimento.cena),
+              TabContents(alimento: Alimento.desayuno),
+              TabContents(alimento: Alimento.comida),
+              TabContents(alimento: Alimento.cena),
             ],
           ),
         ),
-        floatingActionButton: Fab(),
+        floatingActionButton: const Fab(),
       ),
     );
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:universal_platform/universal_platform.dart';
 import 'screens/feedback.dart';
 import 'screens/home.dart';
-import 'dart:io';
 
 class MenuApp extends StatelessWidget {
+  const MenuApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +18,7 @@ class MenuApp extends StatelessWidget {
       ],
       supportedLocales: const [Locale('es', 'MX')],
       title: 'Menú Chapingo',
-      theme: Platform.isIOS
+      theme: UniversalPlatform.isIOS
           ? ThemeData(
               appBarTheme: AppBarTheme(
                 backgroundColor: ThemeData.light().canvasColor,
@@ -45,7 +47,7 @@ class MenuApp extends StatelessWidget {
               ),
               accentColor: Colors.orangeAccent,
             ),
-      darkTheme: Platform.isIOS
+      darkTheme: UniversalPlatform.isIOS
           ? ThemeData(
               brightness: Brightness.dark,
               appBarTheme: const AppBarTheme(
@@ -73,9 +75,9 @@ class MenuApp extends StatelessWidget {
               ),
               accentColor: Colors.orangeAccent,
             ),
-      home: HomePage(),
+      home: const HomePage(),
       routes: {
-        '/feedback': (context) => FeedbackPage(),
+        '/feedback': (context) => const FeedbackPage(),
       },
     );
   }

@@ -5,16 +5,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class FeedbackPage extends StatefulWidget {
+  const FeedbackPage({Key? key}) : super(key: key);
+
   @override
-  FeedbackPageState createState() {
-    return FeedbackPageState();
-  }
+  State<FeedbackPage> createState() => _FeedbackPageState();
 }
 
-class FeedbackPageState extends State<FeedbackPage> {
+class _FeedbackPageState extends State<FeedbackPage> {
   String get feedback => _controller.text;
   final _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  // ignore: unused_field
+  bool _autoValidate = false; // Dart seems to incorrectly think it's unused
   final _controller = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -56,6 +57,7 @@ class FeedbackPageState extends State<FeedbackPage> {
                   if (value == null || value.isEmpty) {
                     return 'En blanco';
                   }
+                  return null;
                 },
                 controller: _controller,
               ),
