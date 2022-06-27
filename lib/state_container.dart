@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:app_install_date/app_install_date.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models.dart';
 
 // TODO: Move to provider, or something else.
@@ -34,6 +37,27 @@ class StateContainerState extends State<StateContainer> {
   @override
   void initState() {
     super.initState();
+    conditionallyRequestReview();
+  }
+
+  Future<void> conditionallyRequestReview() async {
+    final installDate = await AppInstallDate().installDate;
+    final prefs = await SharedPreferences.getInstance();
+    final bool hasRequestedBefore =
+        prefs.getBool('has-requested-review') ?? false;
+    final installedTime = DateTime.now().difference(installDate);
+    if (!hasRequestedBefore && installedTime.inDays >= 10) {
+      final InAppReview inAppReview = InAppReview.instance;
+      final canReview = await inAppReview.isAvailable();
+      if (canReview) {
+        try {
+          inAppReview.requestReview();
+          prefs.setBool('has-requested-review', true);
+        } catch (e) {
+          prefs.setBool('has-requested-review', false);
+        }
+      }
+    }
   }
 
   String get title => state.getTitle();
