@@ -19,7 +19,10 @@ class MenuBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
     final box = context.findRenderObject() as RenderBox?;
-    final sharePositionOrigin = box!.localToGlobal(Offset.zero) & box.size;
+    late final Rect? sharePositionOrigin;
+    if (box != null) {
+      sharePositionOrigin = box.localToGlobal(Offset.zero) & box.size;
+    }
     return PlatformPopupMenu(
       options: <PopupMenuOption>[
         PopupMenuOption(
@@ -51,7 +54,6 @@ class MenuBtn extends StatelessWidget {
             showPlatformDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  final Size size = MediaQuery.of(context).size;
                   return PlatformAlertDialog(
                     title: const Text('Compartir menú'),
                     content: const Text(
@@ -105,7 +107,7 @@ class MenuBtn extends StatelessWidget {
                         final connectivityResult =
                             await Connectivity().checkConnectivity();
                         if (connectivityResult == ConnectivityResult.none) {
-                          Scaffold.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
                                   'Para enviar comentarios, necesitas una conexión a internet.'),
@@ -118,7 +120,8 @@ class MenuBtn extends StatelessWidget {
                                   context: context,
                                   builder: (context) => const FeedbackPage()));
                           if (result == true) {
-                            Scaffold.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content:
                                     Text('¡Gracias por tus comentarios! 🎉'),

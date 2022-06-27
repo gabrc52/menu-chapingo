@@ -81,7 +81,7 @@ class StateContainerState extends State<StateContainer> {
       void showSnackBar(
           {required String content, bool showRetryButton = true}) {
         if (DateTime.now().isAfter(lastUpdate)) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(content),
               action: showRetryButton

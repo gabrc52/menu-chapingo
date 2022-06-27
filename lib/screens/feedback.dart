@@ -77,7 +77,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   Future<void> _sendFeedback() async {
     if (_formKey.currentState?.validate() ?? false) {
-      _scaffoldKey.currentState?.showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Enviando tus comentarios...'),
         duration: Duration(hours: 1),
       ));
@@ -109,7 +109,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
           }
         } catch (e) {
           // TODO: intentar usar messenger, pues se enviará cuando haya internet
-          _scaffoldKey.currentState?.showSnackBar(const SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text(
                 'Ocurrió un error al enviar tus comentarios. Verifica tu conexión, o inténtalo más tarde.'),
           ));
