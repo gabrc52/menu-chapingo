@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   StreamSubscription<ConnectivityResult>? subscription;
 
   // Si hay algún cambio en la conexión, volver a intentar la actualización
@@ -32,8 +32,23 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  /// https://stackoverflow.com/questions/50131598/how-to-handle-app-lifecycle-with-flutter-on-android-and-ios
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
+    super.didChangeAppLifecycleState(lifecycleState);
+    final container = StateContainer.of(context);
+    container.showRefreshIndicatorAndUpdate();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     subscription?.cancel();
   }
