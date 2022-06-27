@@ -66,27 +66,30 @@ class NoAlimentosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final container = StateContainer.of(context);
+    final color = Theme.of(context).brightness == Brightness.light
+        ? Theme.of(context).primaryColorDark
+        : Theme.of(context).colorScheme.secondary;
     return InkWell(
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const CircleAvatar(
+          CircleAvatar(
             radius: 40,
             child: Icon(
               Icons.update,
               size: 60,
             ),
+            backgroundColor: color,
+            foregroundColor: Colors.white,
           ),
           const SizedBox(height: 12),
           Text(
             'Toca para actualizar el menú',
             style: Theme.of(context).textTheme.bodyText1!.copyWith(
                   fontSize: 14,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Theme.of(context).primaryColorDark
-                      : Theme.of(context).colorScheme.secondary,
+                  color: color,
                 ),
             textAlign: TextAlign.center,
           ),
