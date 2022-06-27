@@ -195,14 +195,17 @@ class MenuBtn extends StatelessWidget {
                         subtitle: const Text(
                             'Si te gusta la app, danos 5 estrellas 😉, o comparte tu opinión'),
                         leading: Icon(
-                          UniversalPlatform.isIOS ? Icons.star : Icons.shop,
+                          UniversalPlatform.isIOS
+                              ? const IconData(0xf227, fontFamily: 'ionicons')
+                              : Icons.shop,
                           color: UniversalPlatform.isIOS ? null : Colors.green,
                         ),
                         onTap: () async {
                           if (UniversalPlatform.isIOS) {
                             const String appStoreUrl =
                                 'https://apps.apple.com/mx/app/men%C3%BA-chapingo/id1627445872';
-                            launchUrl(Uri.parse(appStoreUrl));
+                            launchUrl(Uri.parse(appStoreUrl),
+                                mode: LaunchMode.externalApplication);
                           } else {
                             const String playStoreSchemeUrl =
                                 'market://details?id=com.gabo.menu2018';
