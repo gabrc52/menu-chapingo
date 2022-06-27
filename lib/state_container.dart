@@ -4,7 +4,7 @@ import 'package:app_install_date/app_install_date.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'models.dart';
+import 'models/app_state.dart';
 
 // TODO: Move to provider, or something else.
 // I am doing shenanigans trying to migrate this to null safety

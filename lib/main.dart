@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'app.dart';
-import 'models.dart';
+import 'models/app_state.dart';
 import 'state_container.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

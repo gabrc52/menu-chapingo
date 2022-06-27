@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../state_container.dart';
-import '../constants.dart';
+import '../models/constants.dart';
 import '../widgets/custom_refresh_indicator.dart';
-import '../info.dart';
+import '../models/info.dart';
 
 class TabContents extends StatelessWidget {
   const TabContents({required this.alimento, Key? key}) : super(key: key);

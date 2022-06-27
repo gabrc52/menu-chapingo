@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../constants.dart';
+import '../models/constants.dart';
 import '../widgets/appbar.dart';
 import '../widgets/custom_refresh_indicator.dart';
 import '../widgets/fab.dart';
