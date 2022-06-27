@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:universal_platform/universal_platform.dart';
+import 'package:menu2018/models/settings.dart';
+import 'package:provider/provider.dart';
 import '../state_container.dart';
 import 'menu_btn.dart';
 
@@ -15,7 +16,9 @@ AppBar buildAppBar(
     ),
     bottom: TabBar(
       isScrollable: true,
-      labelColor: UniversalPlatform.isIOS ? CupertinoColors.activeBlue : null,
+      labelColor: Provider.of<Settings>(context).isIOSTheme()
+          ? CupertinoColors.activeBlue
+          : null,
       tabs: const <Widget>[
         Tab(text: 'DESAYUNO'),
         Tab(text: 'COMIDA'),

@@ -46,6 +46,7 @@ dependencies:
   universal_platform: ^1.0.0+1
   app_install_date: ^0.1.1
   in_app_review: ^2.0.4
+  provider: ^6.0.3
 
 dev_dependencies:
   flutter_test:

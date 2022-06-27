@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:menu2018/models/settings.dart';
+import 'package:provider/provider.dart';
 import 'package:universal_platform/universal_platform.dart';
 import '../state_container.dart';
 
@@ -29,7 +31,7 @@ class Fab extends StatelessWidget {
     return FloatingActionButton(
       onPressed: () => changeDate(context),
       tooltip: 'Cambiar día',
-      child: Icon(UniversalPlatform.isIOS
+      child: Icon(Provider.of<Settings>(context).isIOSTheme()
           ? (container.state.isToday
               ? CupertinoIcons.calendar_today
               : CupertinoIcons.calendar)

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:menu2018/models/settings.dart';
+import 'package:provider/provider.dart';
 import 'app.dart';
 import 'models/app_state.dart';
 import 'state_container.dart';
@@ -21,8 +23,11 @@ Future<void> main() async {
   // ignore: unused_local_variable
   NotificationSettings settings = await messaging.requestPermission();
 
-  runApp(StateContainer(
-    state: appState,
-    child: const MenuApp(),
+  runApp(ChangeNotifierProvider<Settings>(
+    create: (context) => Settings(),
+    builder: (context, child) => StateContainer(
+      state: appState,
+      child: const MenuApp(),
+    ),
   ));
 }

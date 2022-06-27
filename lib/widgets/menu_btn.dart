@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:menu2018/models/settings.dart';
 import 'package:menu2018/screens/feedback.dart';
 import 'package:menu2018/widgets/fab.dart';
+import 'package:provider/provider.dart';
 import 'package:universal_platform/universal_platform.dart';
 import '../models/constants.dart';
 import '../state_container.dart';
@@ -11,6 +13,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../models/settings.dart';
 
 class MenuBtn extends StatelessWidget {
   const MenuBtn({Key? key}) : super(key: key);
@@ -155,6 +158,38 @@ class MenuBtn extends StatelessWidget {
                   ],
                 );
               },
+            );
+          },
+        ),
+        PopupMenuOption(
+          label: 'Cambiar tema',
+          onTap: (option) {
+            final settings = Provider.of<Settings>(context, listen: false);
+            showPlatformDialog(
+              context: context,
+              builder: (context) => PlatformAlertDialog(
+                title: const Text('Tema'),
+                content: Material(
+                  color: Colors.transparent,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (var value in SelectedTheme.values)
+                        RadioListTile<SelectedTheme>(
+                          title: Text(value.string()),
+                          value: value,
+                          groupValue: settings.theme,
+                          onChanged: (value) {
+                            if (value != null) {
+                              settings.theme = value;
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             );
           },
         ),

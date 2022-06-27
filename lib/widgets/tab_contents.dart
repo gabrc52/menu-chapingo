@@ -77,12 +77,12 @@ class NoAlimentosScreen extends StatelessWidget {
         children: <Widget>[
           CircleAvatar(
             radius: 40,
-            child: Icon(
+            backgroundColor: color,
+            foregroundColor: Colors.white,
+            child: const Icon(
               Icons.update,
               size: 60,
             ),
-            backgroundColor: color,
-            foregroundColor: Colors.white,
           ),
           const SizedBox(height: 12),
           Text(
