@@ -61,8 +61,9 @@ class Defaults {
     "56": [["Leche","Cereal","Chuleta a la cacerola con verduras en salsa roja",null,null,"Frijoles guisados","Tortilla","Café\nJugo tetrapack"],[null,"Espagueti rojo","Verduras a la mantequilla, gratinadas con fajitas de pollo","Salsa roja","Frijoles guisados","Tortilla","Agua de fruta","Duraznos en almíbar"],["Leche",null,"Quesadillas de champiñones","Salsa roja\nLechuga y crema","Frijoles guisados",null,"Café","Fruta\nRocko"]]
   };
 
-  static final inicio = DateTime.utc(2022, 3, 28);
-  static final fin = DateTime.utc(2022, 6, 24);
+  static final inicio = DateTime.utc(2022, 7, 31);
+  static const int startingDay = 35;
+  static final fin = DateTime.utc(2022, 12, 18);
 
   static const lastUpdateMenu = 2022052901;
   static const lastUpdateFechas = 2022041902;

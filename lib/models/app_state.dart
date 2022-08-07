@@ -21,6 +21,7 @@ class AppState {
 
   DateTime inicio = Defaults.inicio;
   DateTime fin = Defaults.fin;
+  int startingDay = Defaults.startingDay;
   DateTime _fecha = today;
 
   /// Se asegura que la fecha no tenga hora
@@ -33,7 +34,10 @@ class AppState {
     /// All dates are now in UTC to fix the bug.
     assert(fecha.isUtc);
     assert(inicio.isUtc);
-    return fecha.difference(inicio).inDays % 56 + 1;
+    // the starting day that would've been chosen for the days to line up
+    // when `startingDay` didn't exist
+    final actualInicio = inicio.add(Duration(days: -startingDay + 1));
+    return fecha.difference(actualInicio).inDays % 56 + 1;
   }
 
   int get diaDelCiclo => _fechaADiaDelCiclo(fecha);
@@ -138,6 +142,7 @@ class AppState {
         prefs.getInt('fMonth')!,
         prefs.getInt('fDay')!,
       );
+      startingDay = prefs.getInt('starting-day') ?? 1;
     }
     if ((prefs.getString('info') != null) &&
         ((prefs.getInt('lastUpdate_Info') ?? 0) > Defaults.lastUpdateInfo)) {
@@ -153,11 +158,17 @@ class AppState {
       prefs.setString('menu', json.encode(menu));
       prefs.setInt('lastUpdate_Menu', updates['menu']);
     }
+
+    if (!(prefs.getBool('fechas-updated-to-v2') ?? false)) {
+      prefs.setInt('lastUpdate_Fechas', 0); // force an update
+      prefs.setBool('fechas-updated-to-v2', true);
+    }
     if (updates['fechas'] > (prefs.getInt('lastUpdate_Fechas') ?? 0)) {
       final Map<String, dynamic> fechas = await _getJson('fechas.json');
-      final Map inicioNuevo = fechas['inicio'];
+      final Map inicioNuevo = fechas['inicio-v2'] ?? fechas['inicio'];
       inicio = DateTime.utc(
           inicioNuevo['year'], inicioNuevo['month'], inicioNuevo['day']);
+      startingDay = inicioNuevo['starting-day'] ?? 1;
       final Map finNuevo = fechas['fin'];
       fin = DateTime.utc(finNuevo['year'], finNuevo['month'], finNuevo['day']);
       prefs.setInt('iYear', inicio.year);
@@ -166,6 +177,7 @@ class AppState {
       prefs.setInt('fYear', fin.year);
       prefs.setInt('fMonth', fin.month);
       prefs.setInt('fDay', fin.day);
+      prefs.setInt('starting-day', startingDay);
       prefs.setInt('lastUpdate_Fechas', updates['fechas']);
     }
     if (updates['info'] > (prefs.getInt('lastUpdate_Info') ?? 0)) {
