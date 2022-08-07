@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:menu2018/models/settings.dart';
 import 'package:provider/provider.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../state_container.dart';
 
 class Fab extends StatelessWidget {

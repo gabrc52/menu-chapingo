@@ -105,10 +105,12 @@ class _FeedbackPageState extends State<FeedbackPage> {
           );
           if (response.statusCode == 200 &&
               response.body.contains('Gracias por tus comentarios.')) {
-            Navigator.of(context).pop(true);
+            if (mounted) {
+              Navigator.of(context).pop(true);
+            }
           }
         } catch (e) {
-          // TODO: intentar usar messenger, pues se enviará cuando haya internet
+          /// TODO: instead, use firebase database and offline mode. this can potentially enable a chat-like page
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text(
                 'Ocurrió un error al enviar tus comentarios. Verifica tu conexión, o inténtalo más tarde.'),

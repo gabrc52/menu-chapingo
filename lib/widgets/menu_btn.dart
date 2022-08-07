@@ -107,24 +107,25 @@ class MenuBtn extends StatelessWidget {
                     PlatformDialogAction(
                       child: PlatformText('Aplicación'),
                       onPressed: () async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        final navigator = Navigator.of(context);
                         final connectivityResult =
                             await Connectivity().checkConnectivity();
                         if (connectivityResult == ConnectivityResult.none) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          messenger.showSnackBar(
                             const SnackBar(
                               content: Text(
                                   'Para enviar comentarios, necesitas una conexión a internet.'),
                             ),
                           );
                         } else {
-                          Navigator.of(context).pop();
-                          final result = await Navigator.of(context).push(
-                              platformPageRoute(
-                                  context: context,
-                                  builder: (context) => const FeedbackPage()));
+                          navigator.pop();
+                          final result = await navigator.push(platformPageRoute(
+                              context: context,
+                              builder: (context) => const FeedbackPage()));
                           if (result == true) {
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            messenger.clearSnackBars();
+                            messenger.showSnackBar(
                               const SnackBar(
                                 content:
                                     Text('¡Gracias por tus comentarios! 🎉'),
@@ -196,6 +197,8 @@ class MenuBtn extends StatelessWidget {
         PopupMenuOption(
           label: 'Acerca de',
           onTap: (option) async {
+            final theme = Theme.of(context);
+
             String intToDateStr(int n) {
               final String string = n.toString();
               return '${string.substring(6, 8)}/${meses[int.parse(string.substring(4, 6)) - 1]}/${string.substring(0, 4)} (${int.parse(string.substring(8, 10))})';
@@ -304,7 +307,7 @@ Aplicación: ${intToDateStr(lastUpdated)}
 
 Creada por Gabriel Rodríguez
 Colaborador/Administrador: Carter R. Dieguiño''',
-                  style: Theme.of(context).textTheme.caption,
+                  style: theme.textTheme.caption,
                 ),
               ],
             );

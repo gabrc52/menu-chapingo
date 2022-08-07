@@ -18,12 +18,8 @@ DateTime get today {
 class AppState {
   Map<String, dynamic> menu = Defaults.menu;
   Map<String, dynamic> info = Defaults.info;
-  DateTime _inicio = Defaults.inicio;
 
-  DateTime get inicio => _inicio;
-
-  set inicio(DateTime newValue) => _inicio = newValue;
-
+  DateTime inicio = Defaults.inicio;
   DateTime fin = Defaults.fin;
   DateTime _fecha = today;
 
@@ -36,8 +32,8 @@ class AppState {
     /// If this is not consistent and one is UTC and one isn't this leads to off-by-one bugs!
     /// All dates are now in UTC to fix the bug.
     assert(fecha.isUtc);
-    assert(_inicio.isUtc);
-    return fecha.difference(_inicio).inDays % 56 + 1;
+    assert(inicio.isUtc);
+    return fecha.difference(inicio).inDays % 56 + 1;
   }
 
   int get diaDelCiclo => _fechaADiaDelCiclo(fecha);
@@ -164,9 +160,9 @@ class AppState {
           inicioNuevo['year'], inicioNuevo['month'], inicioNuevo['day']);
       final Map finNuevo = fechas['fin'];
       fin = DateTime.utc(finNuevo['year'], finNuevo['month'], finNuevo['day']);
-      prefs.setInt('iYear', _inicio.year);
-      prefs.setInt('iMonth', _inicio.month);
-      prefs.setInt('iDay', _inicio.day);
+      prefs.setInt('iYear', inicio.year);
+      prefs.setInt('iMonth', inicio.month);
+      prefs.setInt('iDay', inicio.day);
       prefs.setInt('fYear', fin.year);
       prefs.setInt('fMonth', fin.month);
       prefs.setInt('fDay', fin.day);

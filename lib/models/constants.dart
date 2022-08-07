@@ -47,6 +47,8 @@ class Componente {
   static const postre = 7;
 }
 
+/// TODO: add material 3 theme when it's ready in Flutter
+
 class Themes {
   static final iosLight = ThemeData(
     appBarTheme: AppBarTheme(
