@@ -67,8 +67,6 @@ class Defaults {
   static const lastUpdateMenu = 2022052901;
   static const lastUpdateFechas = 2022041902;
 
-  static const bool legacy = false;
-
   static const info = <String, dynamic>{};
 
   static const lastUpdateInfo = 2020022101;

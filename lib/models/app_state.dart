@@ -20,22 +20,12 @@ class AppState {
   Map<String, dynamic> info = Defaults.info;
   DateTime _inicio = Defaults.inicio;
 
-  DateTime get inicio {
-    if (legacy) return _inicio.add(const Duration(days: -1));
-    return _inicio;
-  }
+  DateTime get inicio => _inicio;
 
   set inicio(DateTime newValue) => _inicio = newValue;
 
   DateTime fin = Defaults.fin;
   DateTime _fecha = today;
-
-  /// Si debería comportarse como la versión anterior:
-  ///
-  /// Un día antes del día 1 es como el día 1
-  ///
-  /// Esto no debería ser así pero es para mantener compatibilidad con la versión anterior hasta que se actualicen
-  bool legacy = Defaults.legacy;
 
   /// Se asegura que la fecha no tenga hora
   DateTime get fecha => _fecha;
@@ -43,14 +33,6 @@ class AppState {
   set fecha(DateTime date) => _fecha = truncateDate(date);
 
   int _fechaADiaDelCiclo(DateTime fecha) {
-    if (legacy && fecha.isAtSameMomentAs(inicio)) {
-      if (menu['0'] != null) {
-        return 0;
-      } else {
-        return 1;
-      }
-    }
-
     /// If this is not consistent and one is UTC and one isn't this leads to off-by-one bugs!
     /// All dates are now in UTC to fix the bug.
     assert(fecha.isUtc);
@@ -160,11 +142,6 @@ class AppState {
         prefs.getInt('fMonth')!,
         prefs.getInt('fDay')!,
       );
-
-      /// See [legacy]
-      if (prefs.getBool('legacy') != null) {
-        legacy = prefs.getBool('legacy')!;
-      }
     }
     if ((prefs.getString('info') != null) &&
         ((prefs.getInt('lastUpdate_Info') ?? 0) > Defaults.lastUpdateInfo)) {
@@ -194,8 +171,6 @@ class AppState {
       prefs.setInt('fMonth', fin.month);
       prefs.setInt('fDay', fin.day);
       prefs.setInt('lastUpdate_Fechas', updates['fechas']);
-      legacy = fechas['legacy'] ?? false;
-      prefs.setBool('legacy', legacy);
     }
     if (updates['info'] > (prefs.getInt('lastUpdate_Info') ?? 0)) {
       info = await _getJson('info.json');
