@@ -71,7 +71,7 @@ class AppState {
 
   List<String?> getMenu(DateTime fecha, int alimento) {
     if (noAlimentos) throw NoAlimentosException();
-    var menuActual = <String?>[]; // ignore: prefer_final_locals
+    final menuActual = <String?>[];
     menu['${_fechaADiaDelCiclo(fecha)}'][alimento]
         .forEach((dynamic element) => menuActual.add(element));
     return menuActual;

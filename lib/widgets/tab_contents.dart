@@ -15,7 +15,7 @@ class TabContents extends StatelessWidget {
     container.firstRefresh();
     List<ListTile> getChildren(BuildContext context) {
       final List<String?> menu = container.state.currentMenu(alimento);
-      List<ListTile> children = []; // ignore: prefer_final_locals
+      final List<ListTile> children = [];
 
       // Agregar info
       void addIfNotNull(Info? info) {
