@@ -35,14 +35,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.0.15
   url_launcher: ^6.1.2
-  firebase_messaging: ^11.4.1
+  firebase_messaging: ^14.2.5
   http: ^0.13.4
-  firebase_core: ^1.17.1
+  firebase_core: ^2.7.0
   firebase_core_desktop: ^1.0.0
-  connectivity_plus: ^2.3.0
-  package_info_plus: ^1.4.2
-  share_plus: ^4.0.4
-  flutter_platform_widgets: ^1.20.0
+  connectivity_plus: ^3.0.3
+  package_info_plus: ^3.0.3
+  share_plus: ^6.3.1
+  flutter_platform_widgets: ^3.0.0
   universal_platform: ^1.0.0+1
   app_install_date: ^0.1.1
   in_app_review: ^2.0.4
