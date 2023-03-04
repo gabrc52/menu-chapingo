@@ -50,6 +50,8 @@ class Componente {
 /// TODO: add material 3 theme when it's ready in Flutter
 
 class Themes {
+  static final androidLight = ThemeData.light(useMaterial3: true);
+
   static final iosLight = ThemeData(
     appBarTheme: AppBarTheme(
       backgroundColor: ThemeData.light().canvasColor,
@@ -72,13 +74,15 @@ class Themes {
     ),
   );
 
-  static final androidLight = ThemeData(
+  static final classicLight = ThemeData(
     colorScheme: ColorScheme.fromSwatch(
       accentColor: Colors.orangeAccent,
       primarySwatch: Colors.blueGrey,
     ),
     accentColor: Colors.orangeAccent,
   );
+
+  static final androidDark = ThemeData.dark(useMaterial3: true);
 
   static final iosDark = ThemeData(
     brightness: Brightness.dark,
@@ -101,7 +105,7 @@ class Themes {
     // brightness: Brightness.dark,
   );
 
-  static final androidDark = ThemeData(
+  static final classicDark = ThemeData(
     colorScheme: ColorScheme.fromSwatch(
       accentColor: Colors.orangeAccent,
       brightness: Brightness.dark,

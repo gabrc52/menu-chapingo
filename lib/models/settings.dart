@@ -3,7 +3,15 @@ import 'package:menu2018/models/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
-enum SelectedTheme { system, androidLight, androidDark, iosLight, iosDark }
+enum SelectedTheme {
+  system,
+  androidLight,
+  androidDark,
+  iosLight,
+  iosDark,
+  classicLight,
+  classicDark
+}
 
 extension ParseToString on SelectedTheme {
   String string() {
@@ -11,13 +19,17 @@ extension ParseToString on SelectedTheme {
       case SelectedTheme.system:
         return 'Usar tema del dispositivo';
       case SelectedTheme.androidLight:
-        return 'Claro clásico';
+        return 'Claro';
       case SelectedTheme.androidDark:
-        return 'Oscuro clásico';
+        return 'Oscuro';
       case SelectedTheme.iosLight:
-        return 'Claro moderno';
+        return 'Claro Apple';
       case SelectedTheme.iosDark:
-        return 'Oscuro moderno';
+        return 'Oscuro Apple';
+      case SelectedTheme.classicLight:
+        return 'Claro clásico';
+      case SelectedTheme.classicDark:
+        return 'Oscuro clásico';
       default:
         return 'Desconocido';
     }
@@ -47,13 +59,19 @@ ThemeData themeFromSelectedTheme(SelectedTheme theme) {
       return Themes.iosLight;
     case SelectedTheme.iosDark:
       return Themes.iosDark;
-    default:
-      return ThemeData();
+    case SelectedTheme.classicLight:
+      return Themes.classicLight;
+    case SelectedTheme.classicDark:
+      return Themes.classicDark;
   }
 }
 
 SelectedTheme themeModeFromInt(int x) {
-  return SelectedTheme.values[x];
+  try {
+    return SelectedTheme.values[x];
+  } catch (e) {
+    return SelectedTheme.system;
+  }
 }
 
 class Settings extends ChangeNotifier {

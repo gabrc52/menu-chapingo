@@ -51,16 +51,21 @@ class TodayButton extends StatelessWidget {
   }) : super(key: key);
 
   final VoidCallback? onPressed;
+  final preMaterial3Padding = const EdgeInsets.fromLTRB(0.4, 5.5, 0.0, 0.0);
+  final material3Padding = const EdgeInsets.fromLTRB(8.5, 5.5, 0.0, 0.0);
 
   @override
   Widget build(BuildContext context) {
+    // why??? is there a better way?
+    final padding =
+        Theme.of(context).useMaterial3 ? material3Padding : preMaterial3Padding;
     return IconButton(
       icon: Stack(
         children: <Widget>[
           Container(
               alignment: Alignment.center,
               margin: EdgeInsets.zero,
-              padding: const EdgeInsets.fromLTRB(0.4, 5.5, 0.0, 0.0),
+              padding: padding,
               child: Text(
                 DateTime.now().day.toString(),
                 style: TextStyle(
