@@ -38,6 +38,7 @@ dependencies:
   firebase_messaging: ^14.2.5
   http: ^0.13.4
   firebase_core: ^2.7.0
+  cloud_firestore: ^4.4.3
   firebase_core_desktop: ^1.0.0
   connectivity_plus: ^3.0.3
   package_info_plus: ^3.0.3

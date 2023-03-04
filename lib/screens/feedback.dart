@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -96,18 +97,17 @@ class _FeedbackPageState extends State<FeedbackPage> {
         token = 'NA:$e';
       } finally {
         try {
-          final response = await http.post(
-            Uri.parse(url),
-            body: {
-              feedback_field: feedback,
-              contact_field: 'Token: $token\nVersión: $buildNumber\n',
-            },
-          );
-          if (response.statusCode == 200 &&
-              response.body.contains('Gracias por tus comentarios.')) {
-            if (mounted) {
-              Navigator.of(context).pop(true);
-            }
+          final db = FirebaseFirestore.instance;
+          final feedbackRef = db.collection('feedback');
+          await feedbackRef.add({
+            'feedback': feedback,
+            'type': 'app',
+            'token': token,
+            'buildNumber': buildNumber,
+            'date': DateTime.now(),
+          });
+          if (mounted) {
+            Navigator.of(context).pop(true);
           }
         } catch (e) {
           /// TODO: instead, use firebase database and offline mode. this can potentially enable a chat-like page
